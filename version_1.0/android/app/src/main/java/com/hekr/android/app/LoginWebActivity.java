@@ -97,8 +97,9 @@ public class LoginWebActivity extends Activity implements ConfigManage {
                         {
                             AssetsDatabaseManager mg = AssetsDatabaseManager.getManager();
                             SQLiteDatabase db = mg.getDatabase("db");
-                            db.execSQL("INSERT INTO settings VALUES('user_credential','"+cookieMap.get("u")+"');");
-
+							if(TextUtils.isEmpty(MySettingsHelper.getCookieUser())){
+								db.execSQL("INSERT INTO settings VALUES('user_credential','"+cookieMap.get("u")+"');");
+							}
                             //Log.i(LoginWebActivity.class.getSimpleName(),"从url切割出来的logincookie值:"+cookieMap.get("u"));
                             ThreadPool threadPool = ThreadPool.getThreadPool();
                             threadPool.addTask(MainActivity.keyRunnable);
