@@ -24,7 +24,7 @@ import java.util.HashMap;
 /**
  * Created by xubukan on 2015/3/20.
  */
-public class LoginWebActivity extends Activity implements ConfigManage {
+public class LoginWebActivity extends Activity{
 
     private WebView mWeb;
     private CustomProgress loginWebProgressBar;
@@ -67,26 +67,16 @@ public class LoginWebActivity extends Activity implements ConfigManage {
                 if(url.contains("success.htm"))
                 {
                     CookieManager cookieManager = CookieManager.getInstance();
-                    String cookiestr = cookieManager.getCookie(url);
-                    //例如 cookiestr:u=k018RfmBjlml%2BhOEIROeJheEuuxNYI6Pigl%2FhTZbqrYU3T2qUp2pB1IQ%3D%3D;_csrftoken_=ClNi
-                    //Log.i(LoginWebActivity.class.getSimpleName(),"LoginWeb中cookiestr:-----"+cookiestr);
+                    String cookiestr = cookieManager.getCookie(url);                   
                     HashMap<String,String> cookieMap = new HashMap<String, String>();
                     if(cookiestr!=null)
                     {
                         String cookieParams[] = cookiestr.split(";");
-                        //切割成了u=k018RfmBjlml%2BhOEIROeJheEuuxNYI6Pigl%2FhTZbqrYU3T2qUp2pB1IQ%3D%3D
-                        //       _csrftoken_=ClNi
-                        //Log.i("CookieLog","cookiestr为："+cookiestr+"------"+cookieParams[0]+":"+cookieParams[1]);
-
                         if(cookieParams.length>0)
                         {
                             for(int i=0;i<cookieParams.length;i++)
                             {
-                                String kvParam[] = cookieParams[i].split("=");
-                                //切割成u
-                                //k018RfmBjlml%2BhOEIROeJheEuuxNYI6Pigl%2FhTZbqrYU3T2qUp2pB1IQ%3D%3D
-                                //_csrftoken_
-                                //ClNi
+                                String kvParam[] = cookieParams[i].split("=");                              
                                 if(kvParam.length==2)
                                 {
                                     cookieMap.put(kvParam[0],kvParam[1]);
@@ -100,7 +90,6 @@ public class LoginWebActivity extends Activity implements ConfigManage {
 							if(TextUtils.isEmpty(MySettingsHelper.getCookieUser())){
 								db.execSQL("INSERT INTO settings VALUES('user_credential','"+cookieMap.get("u")+"');");
 							}
-                            //Log.i(LoginWebActivity.class.getSimpleName(),"从url切割出来的logincookie值:"+cookieMap.get("u"));
                             ThreadPool threadPool = ThreadPool.getThreadPool();
                             threadPool.addTask(MainActivity.keyRunnable);
                             Intent  it = new Intent();
@@ -164,29 +153,5 @@ public class LoginWebActivity extends Activity implements ConfigManage {
             finish();
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    public String lastTemplatesHash() {
-        return null;
-    }
-
-    @Override
-    public void saveLastTemplatesHash() {
-
-    }
-
-    @Override
-    public HashMap<String, String> lastTokens() {
-        return null;
-    }
-
-    @Override
-    public void saveLastTokens(HashMap<String, String> hashMap) {
-        if(hashMap.containsKey("u")) {
-            AssetsDatabaseManager mg = AssetsDatabaseManager.getManager();
-            SQLiteDatabase db = mg.getDatabase("db");
-            db.execSQL("INSERT INTO settings VALUES('user_credential','" + hashMap.get("u") + "');");
-        }
-    }
+    }    
 }
