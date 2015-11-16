@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.hekr.android.app"
+          android:versionCode="1"
+          android:versionName="1.2.5">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_LOGS"/>
+
+	<uses-sdk android:maxSdkVersion="22" 
+	    	  android:minSdkVersion="13">
+	</uses-sdk>
+	
+    <application
+            android:name=".MyApplication"
+            android:allowBackup="true"
+            android:icon="@drawable/appicon"
+            android:label="HEKR"
+            android:persistent="true"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
+            >
+        <!-- android:theme="@android:style/Theme.NoTitleBar.Fullscreen" -->
+        <activity
+                android:name=".LoginActivity"
+                android:label="HEKR"
+                android:launchMode="singleTask"
+                >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".LoginWebActivity" />
+        <activity android:name=".MainActivity"
+                  android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <activity android:name=".DeviceDetailActivity"
+                  android:hardwareAccelerated="true">
+            <intent-filter>
+                <category android:name="android.intent.category.default" />
+            </intent-filter>
+        </activity>
+        
+        <activity android:name=".AboutOursActivity" >
+            <intent-filter>
+                <category android:name="android.intent.category.default" />
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".TuCaoActivity"
+                android:label="@string/title_activity_use_help" >
+            <intent-filter>
+                <category android:name="android.intent.category.default" />
+            </intent-filter>
+        </activity>
+
+        <activity
+                android:name=".ListDeviceActivity"
+                android:label="@string/title_activity_list_device"
+                android:windowSoftInputMode="adjustPan|stateHidden">
+        </activity>
+
+        <activity
+                android:name=".AddDeviceActivity"
+                >
+            <intent-filter>
+                <category android:name="android.intent.category.default" />
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".HekrConfigActivity"
+                >
+            <intent-filter>
+                <category android:name="android.intent.category.default" />
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".RenameDeviceActivity"
+                >
+            <intent-filter>
+                <category android:name="android.intent.category.default" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.hekr.android.app.SetActivity"
+                  android:label="@string/title_activity_set"
+                >
+            <intent-filter>
+                <category android:name="android.intent.category.default" />
+            </intent-filter>
+        </activity>
+      
+        <meta-data android:name="version" android:value="1.2.5"></meta-data>      
+
+    </application>
+
+</manifest>
+
