@@ -18,13 +18,13 @@
     <string name="pull_to_refresh_footer_refreshing_label">加载中\u2026</string>
 
     <string name="about_activity_us">关于</string>
-    <string name="help_activity_tucao">吐槽</string>
+    <string name="help_activity_tucao">反馈</string>
     <string name="tuichu_activity_tuichu">退出</string>
 
     <string name="about_activity_title">关于我们</string>
-    <string name="help_activity_title">吐槽</string>
-    <string name="help_activity_content_title">HEKR的每一个进步，离不开您的吐槽</string>
-    <string name="help_activity_hint">亲，专心吐，使劲吐!</string>
+    <string name="help_activity_title">反馈</string>
+    <string name="help_activity_content_title">感谢您留下宝贵的意见!</string>
+    <string name="help_activity_hint">感谢您留下宝贵的意见!</string>
     
     <string name="add_activity_content_title">为设备注入智慧</string>
     <string name="add_activity_content_threestep">还需要以下三步</string>
@@ -42,16 +42,44 @@
     <string name="please_connect_wifi">请连接Wi-Fi!</string>
 
     <!--list-->
+    <string name="list_alert_dialog_title">选择功能</string>
+    <string name="list_set">设置</string>
+    <string name="list_offline_device_un_rename_tip">离线设备不可改名！</string>
+    <string name="list_delete">删除</string>
+    <string name="list_delete_success_tip">删除成功!</string>
+    <string name="list_delete_fail_tip">删除失败!</string>
+    <string name="list_cancel">取消</string>
     <string name="loading_device">正在载入设备...</string>
     <string name="open">已开</string>
     <string name="close">已关</string>
     <string name="offline">离线</string>
     <string name="online">在线</string>
 
+    <!--set-->
+    <string name="set_title">设置</string>
+    <string name="set_deviceName_tip">设备名称</string>
+    <string name="set_deviceBrand_tip">设备品牌</string>
+    <string name="set_deviceType_tip">设备型号</string>
+    <string name="set_firmwareVersion_tip">固件版本</string>
+    <string name="set_button_control">进入设备控制页面</string>
+    <string name="set_button_not_need_updateDevice">已更新设备</string>
+
+    <string name="set_button_permission_updateDevice">更新设备</string>
+    <string name="set_after_onclick_button_Upgradestate_404_tip">指令解析出错！</string>
+    <string name="set_after_onclick_button_Upgradestate_0_tip">更新成功！</string>
+    <string name="set_after_onclick_button_Upgradestate_2_tip">固件更新校验失败！</string>
+    <string name="set_after_onclick_button_Upgradestate_3_tip">固件更新超时！</string>
+    <string name="set_after_onclick_button_Upgradestate_4_tip">固件更新连接失败！</string>
+    <string name="set_showFirmwareUpdateDialog_title">固件更新</string>
+    <string name="set_after_onclick_not_need_update_button_tip">当前设备已经是最新版本！</string>
+
     <!--rename-->
     <string name="device_oldname">设备名称：</string>
+    <string name="rename_device_success_tip">改名成功！</string>
+    <string name="rename_device_fail_tip">改名失败！</string>
     <string name="hint_device_newname">请输入新名称</string>
     <string name="toast_newname_notnull">新名称不能为空</string>
+    <string name="renameProgressBar_toast_updating">正在修改设备名称...</string>
 
 
     <!--hekrconfig-->
@@ -94,16 +122,9 @@
 
     <!--tucao-->
     <string name="sending_oba">正在发送中，亲！</string>
-    <string name="oba_already_bb_success">亲，您已吐槽成功！</string>
-    <string name="tucao_empty">亲，您的吐槽内容为空！</string>
+    <string name="oba_already_bb_success">亲，您已反馈成功！</string>
+    <string name="tucao_empty">亲，您的反馈内容为空！</string>
     <string name="check_network">请您检查网络！</string>
 
-    <!--updateapp-->
-    <string name="have_new_software_download_go">有最新的软件包哦，亲快下载吧~</string>
-    <string name="software_update">软件版本更新</string>
-    <string name="download">下载</string>
-    <string name="see_you_later">以后再说</string>
-    <string name="software_version_update">软件版本更新</string>
-    <string name="update_cancel">取消</string>
 
 </resources>

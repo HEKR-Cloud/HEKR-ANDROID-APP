@@ -36,16 +36,45 @@
     <string name="please_connect_wifi">Please connect to the Wi-Fi!</string>
 
     <!-- list -->
+    <string name="list_alert_dialog_title">Choose Function</string>
+    <string name="list_set">Set</string>
+    <string name="list_offline_device_un_rename_tip">Offline device cannot be renamed!</string>
+    <string name="list_delete">Delete</string>
+    <string name="list_delete_success_tip">Delete Success!</string>
+    <string name="list_delete_fail_tip">Delete Fail!</string>
+    <string name="list_cancel">Cancel</string>
     <string name="loading_device">Loading device</string>
     <string name="open">ON</string>
     <string name="close">OFF</string>
     <string name="offline">N/A</string>
     <string name="online">Online</string>
 
+    <!--set-->
+    <string name="set_title">SET</string>
+    <string name="set_deviceName_tip">DeviceName</string>
+    <string name="set_deviceBrand_tip">DeviceBrand</string>
+    <string name="set_deviceType_tip">DeviceType</string>
+    <string name="set_firmwareVersion_tip">FirmwareVersion</string>
+    <string name="set_button_control">Enter the page of device control</string>
+    <string name="set_button_not_need_updateDevice">Updated device</string>
+
+    <string name="set_button_permission_updateDevice">Update device</string>
+    <string name="set_after_onclick_button_Upgradestate_404_tip">Command parsing error!</string>
+    <string name="set_after_onclick_button_Upgradestate_0_tip">Updated successfully!</string>
+    <string name="set_after_onclick_button_Upgradestate_2_tip">Firmware update check failed!</string>
+    <string name="set_after_onclick_button_Upgradestate_3_tip">Firmware update timeout!</string>
+    <string name="set_after_onclick_button_Upgradestate_4_tip">The firmware update the connection failed!</string>
+    <string name="set_showFirmwareUpdateDialog_title">Firmware update</string>
+    <string name="set_after_onclick_not_need_update_button_tip">The current device is the latest version!</string>
+
+
     <!-- rename -->
     <string name="device_oldname">Device Name:</string>
+    <string name="rename_device_success_tip">Rename Success！</string>
+    <string name="rename_device_fail_tip">Rename Fail！</string>
     <string name="hint_device_newname">Please enter a new name</string>
     <string name="toast_newname_notnull">The new name cannot be empty</string>
+    <string name="renameProgressBar_toast_updating">Updating Device Name...</string>
 
     <!-- hekrconfig -->
     <string name="hekr_config">device config</string>
@@ -83,14 +112,5 @@
     <string name="oba_already_bb_success">sent successfully!</string>
     <string name="tucao_empty">your advice is empty</string>
     <string name="check_network">Please check the network</string>
-
-    <!-- updateapp -->
-    <string name="have_new_software_download_go">you have the latest software package, want to download it?</string>
-    <string name="software_update">Software update</string>
-    <string name="download">Download</string>
-    <string name="see_you_later">Later</string>
-    <string name="software_version_update">Software version update</string>
-    <string name="update_cancel">Cancel</string>
-    <string name="title_activity_set">SetActivity</string>
 
 </resources>

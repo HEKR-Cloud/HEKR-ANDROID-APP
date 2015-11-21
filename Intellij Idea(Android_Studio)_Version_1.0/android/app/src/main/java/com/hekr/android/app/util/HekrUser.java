@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import android.util.Log;
-import com.hekr.android.app.Interface.DeviceManage;
 
 import java.util.List;
 import java.util.Map;
@@ -13,7 +12,7 @@ import java.util.Random;
 /**
  * Created by kj on 15/7/24.
  */
-public class HekrUser implements DeviceManage {
+public class HekrUser {
     private Random r = new Random();
     private String ucookie;
     private String _csrftoken_ = "_csrftoken_=abcd";
@@ -93,17 +92,11 @@ public class HekrUser implements DeviceManage {
     //在线设备删除
     public boolean removeDevice(String tid){
         String respstr = HttpUtil.doGet( httphost+"/device/clearAccesskey.json?tid="+tid +"&" + _csrftoken_ , cookie);
-        //Log.i("coco","_csrftoken_:"+_csrftoken_);
-        //Log.i("coco","cookie:"+cookie);
-        //Log.i("MyLog","respstr:"+respstr);
         return isSuccess(respstr);
     }
     //离线设备删除
     public boolean deleteDevice(String tid){
         String respstr = HttpUtil.doGet( httphost+"/device/delete.json?tid="+tid +"&" + _csrftoken_ , cookie);
-        //Log.i("coco","_csrftoken_:"+_csrftoken_);
-        //Log.i("coco","cookie:"+cookie);
-        //Log.i("MyLog","respstr:"+respstr);
         return isSuccess(respstr);
     }
 
@@ -111,6 +104,20 @@ public class HekrUser implements DeviceManage {
     public boolean renameDevice(String tid,String name){
         String respstr = HttpUtil.doGet( httphost+"/device/rename/"+tid+".json?"+"_csrftoken_=abcd"+"&name="+name, cookie);
         return isSuccess(respstr);
+    }
+
+    //固件信息
+    public String deviceFirmwareInformation(String mid){
+        String respstr = HttpUtil.doGet( "http://poseidon.hekr.me/appmodelmid.json?mid="+mid, cookie);
+        return respstr;
+    }
+
+    //固件升级c2-4
+    public String appFirmwareUpdate(String mid,String tid,String binver,String bintype){
+        String respstr="";
+        respstr=HttpUtil.doGet("http://poseidon.hekr.me/appfirmware.json?mid="+mid+"&tid="+tid+"&binver="+binver+"&bintype="+bintype,cookie);
+
+        return respstr;
     }
 
     public boolean activateDevice(String encryptkey,String ver,long time){
@@ -124,7 +131,6 @@ public class HekrUser implements DeviceManage {
         return isSuccess(respstr);
     }
 
-    @Override
     public List folderList() {
         Map m = null;
         String respstr = HttpUtil.doGet( httphost+"/folder/list.json?" + _csrftoken_, cookie);
@@ -203,15 +209,4 @@ public class HekrUser implements DeviceManage {
             return false;
         }
     }
-    private static String getRandomString(int length) { //length表示生成字符串的长度
-        String base = "abcdefghijklmnopqrstuvwxyz0123456789";
-        Random random = new Random();
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < length; i++) {
-            int number = random.nextInt(base.length());
-            sb.append(base.charAt(number));
-        }
-        return sb.toString();
-    }
-
 }

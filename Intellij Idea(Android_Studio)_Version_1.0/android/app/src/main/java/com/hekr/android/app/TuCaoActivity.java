@@ -1,17 +1,11 @@
 package com.hekr.android.app;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -21,8 +15,6 @@ import com.hekr.android.app.model.Global;
 import com.hekr.android.app.ui.CustomProgress;
 import com.hekr.android.app.util.HttpHelper;
 import com.hekr.android.app.util.ThreadPool;
-import com.hekr.android.app.util.WifiAdmin;
-import com.umeng.analytics.MobclickAgent;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,6 +23,7 @@ public class TuCaoActivity extends Activity {
     private EditText content;
     private ImageButton send;
     private CustomProgress tucaoProgressBar;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_use_help);
@@ -49,12 +42,11 @@ public class TuCaoActivity extends Activity {
                         Message msg = new Message();
                         Bundle data = new Bundle();
                         data.putString("back", HttpHelper.doPost("http://poseido.hekr.me/tucao.json", userAccessKey, message));
-                        //Log.i("MyLog","runnable:backJson_str:"+HttpHelper.doPost("http://poseido.hekr.me/tucao.json", userAccessKey, message));
                         msg.setData(data);
                         sendHandler.sendMessage(msg);
                     }
                 };
-                if (!"".equals(content.getText().toString()) && content.getText().toString() != null) {
+                if (!TextUtils.isEmpty(content.getText().toString().trim())) {
                     tucaoProgressBar = CustomProgress.show(TuCaoActivity.this, getResources().getString(R.string.sending_oba).toString(), true, null);
                     ThreadPool threadPool = ThreadPool.getThreadPool();
                     threadPool.addTask(sendRunnable);
@@ -76,8 +68,7 @@ public class TuCaoActivity extends Activity {
             }
 
             String backJson_str=data.getString("back");
-            //Log.i("MyLog","backJson_str:"+backJson_str);
-            if(tucaoProgressBar!=null){
+            if(tucaoProgressBar!=null&&tucaoProgressBar.isShowing()){
                 tucaoProgressBar.dismiss();
             }
             if(backJson_str!=null){
@@ -90,7 +81,6 @@ public class TuCaoActivity extends Activity {
                         Toast.makeText(TuCaoActivity.this,getResources().getString(R.string.check_network).toString(),Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
-                    e.printStackTrace();
                     Toast.makeText(TuCaoActivity.this,getResources().getString(R.string.check_network).toString(),Toast.LENGTH_SHORT).show();
                 }
             }else{
@@ -99,28 +89,37 @@ public class TuCaoActivity extends Activity {
 
         }
     };
-    public void onPause() {
-        super.onPause();
-        MobclickAgent.onPause(this);
-    }
-    //竖屏
-    protected void onResume()
-    { /** * 设置为竖屏 */
-        if(getRequestedOrientation()!= ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT)
-        {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
-        }
-        super.onResume();
-        MobclickAgent.onResume(this);
-    }
-    protected void onDestroy() {
-        Log.i("LifeCycle", "TuCaoActivity--onDestroy()被触发");
-
-        super.onDestroy();
-    }
 
     public void navBack(View view)
     {
         this.finish();
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        if(getRequestedOrientation()!= ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT)
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        }
+        super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        if(tucaoProgressBar!=null&&tucaoProgressBar.isShowing()){
+            tucaoProgressBar.dismiss();
+        }
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
 }

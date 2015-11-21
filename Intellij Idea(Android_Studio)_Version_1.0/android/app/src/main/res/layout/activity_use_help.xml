@@ -13,7 +13,7 @@
             android:layout_marginBottom="0dp"
             android:background="#ffffffff"
             >
-        <com.hekr.android.app.ui.IconView
+        <ImageView
                 android:layout_alignParentLeft="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -24,7 +24,7 @@
                 android:onClick="navBack"
                 android:padding="10dp"
                 android:textSize="20dp"
-                android:textColor="#333333"
+                android:src="@drawable/black_backicon"
                 android:text="&#xf060;" />
         <TextView
                 android:layout_width="wrap_content"
@@ -53,8 +53,7 @@
                   android:id="@+id/tucaocontent"
                   android:layout_gravity="center_horizontal"
                   android:cursorVisible="true"
-                  android:layout_marginTop="32dp"
-                  android:hint="@string/help_activity_hint"
+                  android:layout_marginTop="10dp"
                   android:background="@drawable/tucaoeditbg"/>
         <ImageButton android:layout_width="280dp"
                      android:layout_height="43dp"

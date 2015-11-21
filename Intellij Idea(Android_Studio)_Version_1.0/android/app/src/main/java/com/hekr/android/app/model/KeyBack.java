@@ -3,12 +3,12 @@ package com.hekr.android.app.model;
 /**
  * Created by Lenovo on 2015/4/4.
  */
-//存放访问了生成keyAPI之后用来封装一些返回信息的类
+
 public class KeyBack {
     private String uid;
     private Long time;
     private String type;
-    private String token;//这个需要用到，提供给设置热点key的参数中
+    private String token;
 
     public String getType() {
         return type;

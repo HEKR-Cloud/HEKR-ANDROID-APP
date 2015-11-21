@@ -45,7 +45,7 @@ public final class ThreadPool {
         return threadPool;
     }
 
-    // 执行任务,其实只是把任务加入任务队列，什么时候执行有线程池管理器觉定
+    // 执行任务,其实只是把任务加入任务队列，什么时候执行有线程池管理器决定
     public void addTask(Runnable task) {
         synchronized (taskQueue) {
             taskQueue.add(task);

@@ -20,13 +20,8 @@ import com.hekr.android.app.model.Global;
 import com.hekr.android.app.model.KeyBack;
 import com.hekr.android.app.ui.SliderMenu;
 import com.hekr.android.app.util.*;
-import com.umeng.analytics.AnalyticsConfig;
-import com.umeng.analytics.MobclickAgent;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.File;
-import java.io.UnsupportedEncodingException;
 
 
 public class MainActivity extends ActivityGroup {
@@ -47,9 +42,7 @@ public class MainActivity extends ActivityGroup {
     public WifiManager wifiManager;
     private BroadcastReceiver connectionReceiver;
 
-    private MyApplication gloabData;
-
-    public AssetsDatabaseManager mg;
+    private AssetsDatabaseManager mg;
     private SQLiteDatabase db;
 
     @Override
@@ -66,16 +59,14 @@ public class MainActivity extends ActivityGroup {
             threadPool.addTask(MainActivity.keyRunnable);
         }
         //检测到服务器的资源刷新处理
-        CacheHelper.doUpdateProductIconList();     
+        CacheHelper.doUpdateProductIconList();
 
-        //创建广播监听网络状况
         createReceiver();
 
         aboutOurs.setOnClickListener(buttonClick);
         useHelp.setOnClickListener(buttonClick);
         logout.setOnClickListener(buttonClick);
 
-        Log.i("LifeCycle", "MainActivity--onCreate()被触发");
     }
     View.OnClickListener buttonClick=new View.OnClickListener() {
         @Override
@@ -98,7 +89,6 @@ public class MainActivity extends ActivityGroup {
                         clearCookies(MainActivity.this);
                         Log.i(TAG, "执行退出");
                         db.execSQL("delete from settings");
-                        MobclickAgent.onKillProcess(MainActivity.this);
                         Intent intoLogin = new Intent();
                         intoLogin.setClass(MainActivity.this, LoginActivity.class);
                         intoLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -124,7 +114,6 @@ public class MainActivity extends ActivityGroup {
     }
 
     private void initData(){
-        //在Mainactivity中添加一个View(ListDeviceActivity)
         mContainer.addView(getLocalActivityManager().startActivity("device", new Intent(MainActivity.this, ListDeviceActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView());
 
         AssetsDatabaseManager.initManager(getApplication());
@@ -132,7 +121,6 @@ public class MainActivity extends ActivityGroup {
         db = mg.getDatabase("db");
 
         context = this;
-        gloabData= (MyApplication) getApplication();
     }
 
     private void createReceiver() {
@@ -148,35 +136,20 @@ public class MainActivity extends ActivityGroup {
                     if (netInfo != null && netInfo.isAvailable()) {
                         //网络连接
                         String name = netInfo.getTypeName();
-                        Log.i(TAG,"MainActivity_netInfo_getTypeName"+name);
+
                         ThreadPool threadPool = ThreadPool.getThreadPool();
                         threadPool.addTask(ListDeviceActivity.lRunnable);
                         if (netInfo.getType() == ConnectivityManager.TYPE_WIFI) {
                             //WiFi网络
                             Toast.makeText(context, getResources().getString(R.string.checked_have_wifi), Toast.LENGTH_SHORT).show();
-                            Global.isWIFI=true;
-                            gloabData.setWifiStatus(true);
-                            Log.i("MyLog","当前网络是否是wifi连接："+gloabData.isWifiStatus());
 
                         } else if (netInfo.getType() == ConnectivityManager.TYPE_ETHERNET) {
-                            Global.isWIFI=false;
-                            gloabData.setWifiStatus(false);
-                            Log.i("MyLog","当前网络是否是wifi连接："+gloabData.isWifiStatus());
-                            //有线网络
-                            //Toast.makeText(context,getResources().getString(R.string.checked_have_network).toString(),Toast.LENGTH_SHORT).show();
+
 
                         } else if (netInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
-                            //3g网络
-                            Global.isWIFI=false;
-                            gloabData.setWifiStatus(false);
-                            Log.i("MyLog","当前网络是否是wifi连接："+gloabData.isWifiStatus());
-                            Toast.makeText(context, getResources().getString(R.string.network_three_g), Toast.LENGTH_SHORT).show();
+
                         }
                     } else {
-                        //网络断开
-                        Global.isWIFI=false;
-                        gloabData.setWifiStatus(false);
-                        Log.i("MyLog","当前网络是否是wifi连接："+gloabData.isWifiStatus());
                         Toast.makeText(context, getResources().getString(R.string.checked_network_disconnect), Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -196,31 +169,11 @@ public class MainActivity extends ActivityGroup {
 
     //进入一键配置添加模块
     public void addDevice(View view) {
-        ConnectivityManager mConnectivityManager = (ConnectivityManager) getSystemService(context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo=null;
-        if(mConnectivityManager!=null){
-            networkInfo = mConnectivityManager.getActiveNetworkInfo();
-        }
-
-        if(networkInfo!=null&&networkInfo.getType()==ConnectivityManager.TYPE_WIFI){
-            Log.i(TAG,"wifi已经开了!");
-        }
-        else{
-            wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
-            try {
-                wifiManager.setWifiEnabled(true);
-            } catch (Exception e) {
-                Log.i("MyLog", "不允许打开wifi");
-            }
-        }
-
-
         if (TextUtils.isEmpty(Global.ACCESSKEY) )
         {
             Toast.makeText(MainActivity.this, getResources().getString(R.string.get_user_message), Toast.LENGTH_SHORT).show();
         } else {
             Intent i = new Intent(MainActivity.this, HekrConfigActivity.class);
-            Log.i("GetuiSdkDemo", "MainActivity:i:---" + i);
             startActivity(i);
         }
 
@@ -277,7 +230,6 @@ public class MainActivity extends ActivityGroup {
                     key.setType(deviceAccesskeyJson.getString("type"));
                     key.setToken(deviceAccesskeyJson.getString("token"));
                     Global.ACCESSKEY = deviceAccesskeyJson.getString("token");
-                    //Log.i(TAG,"mainHandler_DEVICEACCESSKEY:"+Global.ACCESSKEY);
                     Global.uid=deviceAccesskeyJson.getString("uid");
                 } catch (JSONException e) {
                     Log.i(TAG, "mainHandler中设置deviceAccesskey出现异常：" + e.getMessage());
@@ -287,7 +239,6 @@ public class MainActivity extends ActivityGroup {
                 try {
                     JSONObject UserAccesskeyJson = new JSONObject(userAccessKey_str);
                     Global.USERACCESSKEY = UserAccesskeyJson.getString("token");
-                    //Log.i("MyLog","mainHandler_USERACCESSKEY:"+Global.USERACCESSKEY);
                 } catch (JSONException e) {
                     Log.i(TAG, "mainHandler中设置userAccesskey出现异常：" + e.getMessage());
                 }
@@ -297,8 +248,6 @@ public class MainActivity extends ActivityGroup {
 
     @Override
     protected void onDestroy() {
-        Log.i("LifeCycle", "MainActivity--onDestroy()被触发");
-        //销毁广播
         if (connectionReceiver != null) {
             unregisterReceiver(connectionReceiver);
         }
@@ -306,34 +255,16 @@ public class MainActivity extends ActivityGroup {
     }
 
     @Override
-    protected void onResume() { /** * 设置为竖屏 */
-        Log.i("LifeCycle", "MainActivity--onResume()被触发");
+    protected void onResume() {
         if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
         }
         super.onResume();
-        MobclickAgent.onResume(this);
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.i("LifeCycle", "MainActivity--onPause()被触发");
-        MobclickAgent.onPause(this);
-    }
-
-    public static boolean isWIFINet(Context context) {
-        ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if (networkInfo == null) {
-
-            networkInfo = connMgr.getActiveNetworkInfo();
-        }
-
-        if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
-            return true;
-        }
-        return false;
-
     }
 }

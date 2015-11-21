@@ -3,10 +3,10 @@ package com.hekr.android.app.model;
 /**
  * Created by Lenovo on 2015/4/3.
  */
-public class RouterBack//让热点设备连路由器返回的两个字段
+public class RouterBack
 {
-    private String msg;//返回一个successfully
-    private int code;//返回一个0
+    private String msg;
+    private int code;
 
     public void setMsg(String msg) {
         this.msg = msg;
