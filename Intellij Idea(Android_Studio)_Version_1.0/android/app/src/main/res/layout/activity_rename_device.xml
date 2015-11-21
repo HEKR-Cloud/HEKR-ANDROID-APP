@@ -16,7 +16,7 @@
             android:layout_marginBottom="0dp"
             android:background="#00000000"
             >
-        <com.hekr.android.app.ui.IconView
+        <ImageView
                 android:layout_alignParentLeft="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
                 android:onClick="navBack"
                 android:padding="10dp"
                 android:textSize="20dp"
-                android:textColor="#ffffffff"
+                android:src="@drawable/backicon"
                 android:text="&#xf060;" />
         <TextView
                 android:id="@+id/devicetype"

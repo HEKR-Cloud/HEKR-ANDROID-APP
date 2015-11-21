@@ -41,7 +41,6 @@ public class AssetsDatabaseManager {
         if(mInstance == null){
             mInstance = new AssetsDatabaseManager(context);
         }
-        //Log.i(ListDeviceActivity.class.getSimpleName(),"mInstance===:"+mInstance);
     }
 
     /**
@@ -120,29 +119,6 @@ public class AssetsDatabaseManager {
         }
         return null;
     }
-    public String getIconUrlByPid(String pid)
-    {
-        if(mInstance!=null)
-        {
-            SQLiteDatabase db = mInstance.getDatabase("db");
-            Cursor cursor = null;
-            try {
-                cursor = db.rawQuery("select logo_url from provider where id=?",
-                        new String[]{pid});
-                if (cursor.moveToNext()) {
-                    return cursor.getString(0);
-                }
-            }catch (Exception e){
-
-            }finally {
-                if(cursor!=null) {
-                    cursor.close();
-                }
-            }
-        }
-
-        return null;
-    }
 
     public boolean needProductIconUpdate(String pid,String updated){
         if(mInstance!=null)
@@ -192,70 +168,6 @@ public class AssetsDatabaseManager {
         return false;
     }
 
-    public boolean needProductPageInsert(String pageId){
-        if(mInstance!=null)
-        {
-            SQLiteDatabase db = mInstance.getDatabase("db");
-            Cursor cursor=null;
-            try {
-                cursor = db.rawQuery("select path from page where id=?",
-                        new String[]{pageId});
-                //数据库查出来的结果为0条数据
-                if(cursor.getCount()==0)
-                {
-                    return true;
-                }
-                return false;
-            }catch (Exception e){
-                return false;
-            }finally {
-                if(cursor!=null) {
-                    cursor.close();
-                }
-            }
-        }
-        return false;
-    }
-    public boolean needProductPageUpdate(String pageId,String version){
-        if(mInstance!=null)
-        {
-            SQLiteDatabase db = mInstance.getDatabase("db");
-            Cursor cursor=null;
-            try {
-                cursor = db.rawQuery("select path from page where id=? and version=?",
-                        new String[]{pageId,version});
-                if(cursor.getCount()==0)
-                {
-                    return true;
-                }
-                return false;
-            }catch (Exception e){
-                return false;
-            }finally {
-                if(cursor!=null) {
-                    cursor.close();
-                }
-            }
-        }
-        return false;
-    }
-    public boolean needproviderIconUpdate(String cid,String updated){
-        if(mInstance!=null)
-        {
-            SQLiteDatabase db = mInstance.getDatabase("db");
-            Cursor cursor = db.rawQuery("select logo_url from provider where id=? and updated_at=?",
-                    new String[]{cid,updated});
-            if(cursor.moveToNext())
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
     private String getDatabaseFilepath(){
         return String.format(databasepath, context.getApplicationInfo().packageName);
     }
@@ -281,7 +193,6 @@ public class AssetsDatabaseManager {
             ostream.close();
         }
         catch(Exception e){
-            //e.printStackTrace();
             try{
                 if(istream!=null)
                     istream.close();

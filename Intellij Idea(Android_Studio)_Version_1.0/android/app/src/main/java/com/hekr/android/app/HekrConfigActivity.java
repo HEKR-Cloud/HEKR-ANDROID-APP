@@ -12,9 +12,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.KeyEvent;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -22,17 +20,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Looper;
 
-import java.net.DatagramPacket;
-
 import com.hekr.android.app.model.Global;
 import com.hekr.android.app.ui.CustomProgress;
 import com.hekr.android.app.util.HekrConfig;
-import com.hekr.android.app.util.ThreadPool;
-import com.hekr.android.app.util.UDPConfig;
 import com.hekr.android.app.util.WifiAdmin;
-import com.umeng.analytics.MobclickAgent;
-
-import java.io.IOException;
 
 /**
  * Created by kj on 15/6/18.
@@ -41,8 +32,8 @@ public class HekrConfigActivity extends Activity {
     private BroadcastReceiver addconnectionReceiver;//监听当前网络状态
 
     private WifiManager wifiManager;//管理wifi
-    static private EditText passwordText;
-    static private EditText ssidText;
+    private static EditText passwordText;
+    private static EditText ssidText;
     private ImageButton doneButton;
     private TextView softAPButton;
     private static boolean isConfigEnd=false;
@@ -60,7 +51,7 @@ public class HekrConfigActivity extends Activity {
 
         @Override
         public void onClick(View v) {
-            if("".equals(ssidText.getText().toString().trim())||ssidText.getText().toString().trim()==null){
+            if(TextUtils.isEmpty(ssidText.getText().toString().trim())){
                 if (!"".equals(countryCategory) && countryCategory.equals("CN")) {
                     Toast.makeText(activity, "设备未进入配置模式，请检查手机wifi", Toast.LENGTH_SHORT).show();
                 }
@@ -69,9 +60,8 @@ public class HekrConfigActivity extends Activity {
                 }
             }
             else {
-                if ("".equals(passwordText.getText().toString().trim())||passwordText.getText().toString().trim()==null) {
+                if (TextUtils.isEmpty(passwordText.getText().toString().trim())) {
                     if (!"".equals(countryCategory) && countryCategory.equals("CN")) {
-                        //Toast.makeText(activity, "密码为空", Toast.LENGTH_SHORT).show();
                         AlertDialog.Builder builder = new AlertDialog.Builder(alertContext);
                         builder.setMessage("密码为空，确认继续添加吗?");
                         builder.setTitle("提示");
@@ -87,7 +77,7 @@ public class HekrConfigActivity extends Activity {
 
                                 //isConfigEnd = false;
                                 try {
-                                    configProgressBar = CustomProgress.show(activity, activity.getResources().getString(R.string.adding_device).toString(), true, new DialogInterface.OnCancelListener() {
+                                    configProgressBar = CustomProgress.show(activity, activity.getResources().getString(R.string.adding_device), true, new DialogInterface.OnCancelListener() {
                                         @Override
                                         public void onCancel(DialogInterface dialogInterface) {
                                             //isConfigEnd = true;
@@ -105,7 +95,7 @@ public class HekrConfigActivity extends Activity {
                                         hc = new HekrConfig(Global.ACCESSKEY);
                                         Object ret = hc.config(ssidText.getText() + "", passwordText.getText() + "");
 
-                                        if (configProgressBar != null) {
+                                        if (configProgressBar != null&&configProgressBar.isShowing()) {
                                             configProgressBar.dismiss();
                                         }
 
@@ -142,7 +132,9 @@ public class HekrConfigActivity extends Activity {
                                 }
                             }
                         });
-                        builder.create().show();
+                        if(alertContext!=null){
+                            builder.create().show();
+                        }
                     }
                     else{
                         //Toast.makeText(activity, "Empty password", Toast.LENGTH_SHORT).show();
@@ -161,7 +153,7 @@ public class HekrConfigActivity extends Activity {
 
                                 //isConfigEnd = false;
                                 try {
-                                    configProgressBar = CustomProgress.show(activity, activity.getResources().getString(R.string.adding_device).toString(), true, new DialogInterface.OnCancelListener() {
+                                    configProgressBar = CustomProgress.show(activity, activity.getResources().getString(R.string.adding_device), true, new DialogInterface.OnCancelListener() {
                                         @Override
                                         public void onCancel(DialogInterface dialogInterface) {
                                             //isConfigEnd = true;
@@ -179,7 +171,7 @@ public class HekrConfigActivity extends Activity {
                                         hc = new HekrConfig(Global.ACCESSKEY);
                                         Object ret = hc.config(ssidText.getText() + "", passwordText.getText() + "");
 
-                                        if (configProgressBar != null) {
+                                        if (configProgressBar != null&&configProgressBar.isShowing()) {
                                             configProgressBar.dismiss();
                                         }
 
@@ -216,7 +208,9 @@ public class HekrConfigActivity extends Activity {
                                 }
                             }
                         });
-                        builder.create().show();
+                        if(alertContext!=null) {
+                            builder.create().show();
+                        }
                     }
                 } else {
                     if (lock != null) {
@@ -243,7 +237,7 @@ public class HekrConfigActivity extends Activity {
                             hc = new HekrConfig(Global.ACCESSKEY);
                             Object ret = hc.config(ssidText.getText() + "", passwordText.getText() + "");
 
-                            if (configProgressBar != null) {
+                            if (configProgressBar != null&&configProgressBar.isShowing()) {
                                 configProgressBar.dismiss();
                             }
 
@@ -276,8 +270,7 @@ public class HekrConfigActivity extends Activity {
     }
 
 
-    private void createReceiver()
-    {
+    private void createReceiver() {
         // 创建网络监听广播
         addconnectionReceiver = new BroadcastReceiver()
         {
@@ -377,23 +370,32 @@ public class HekrConfigActivity extends Activity {
 
         countryCategory=getResources().getConfiguration().locale.getCountry();
     }
-    //变成竖屏
+
+    @Override
     protected void onResume()
-    { /** * 设置为横屏 */
+    {
         if(getRequestedOrientation()!= ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT)
         {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
         }
         super.onResume();
-        MobclickAgent.onResume(this);
+
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (configProgressBar != null&&configProgressBar.isShowing()) {
+            configProgressBar.dismiss();
+        }
+    }
+
     @Override
     protected void onDestroy() {
         if(addconnectionReceiver!=null){
             unregisterReceiver(addconnectionReceiver);
         }
         super.onDestroy();
-        Log.i("LifeCycle","HekrConfigActivity--onDestroy()被触发");
     }
 
 }

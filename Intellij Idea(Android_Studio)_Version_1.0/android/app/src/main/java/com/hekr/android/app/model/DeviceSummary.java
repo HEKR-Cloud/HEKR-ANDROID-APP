@@ -15,7 +15,7 @@ public class DeviceSummary implements Serializable
     private String tid;//设备唯一标识
     private String product_img;
     private String producer_img;
-    private String name;//有些设备没有，应该是表示什么类型的设备，例如浴霸
+    private String name;//什么类型的设备，例如浴霸
     private String state;
 
     public String getState() {

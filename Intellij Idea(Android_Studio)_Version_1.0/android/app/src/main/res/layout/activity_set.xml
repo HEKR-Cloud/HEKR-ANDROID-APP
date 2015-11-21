@@ -15,7 +15,7 @@
             android:layout_marginBottom="0dp"
             android:background="#00000000"
             >
-        <com.hekr.android.app.ui.IconView
+        <ImageView
                 android:layout_alignParentLeft="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
                 android:onClick="navBack"
                 android:padding="10dp"
                 android:textSize="20dp"
-                android:textColor="#ffffffff"
+                android:src="@drawable/backicon"
                 android:text="&#xf060;" />
         <TextView
                 android:id="@+id/devicetype"
@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="设置"
+                android:text="@string/set_title"
                 android:textSize="20dp">
 
         </TextView>
@@ -51,14 +51,15 @@
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="0.18">
-                <!--<com.hekr.android.app.ui.RoundBorderRelativeLayout-->
-                        <!--android:layout_width=""-->
-                        <!--android:layout_height="">-->
-                     <!--<ImageView android:layout_width=""-->
-                                <!--android:layout_height=""/>-->
-
-                <!--</com.hekr.android.app.ui.RoundBorderRelativeLayout>-->
+                    android:layout_weight="0.18"
+                    android:layout_gravity="center"
+                    android:gravity="center">
+                <ImageView
+                        android:id="@+id/circleImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/logo"
+                        />
 
             </LinearLayout>
 
@@ -75,21 +76,31 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="0.25"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal" >
                             <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_centerVertical="true"
-                                    android:text="设备名称"
+                                    android:text="@string/set_deviceName_tip"
                                     android:textColor="#ffffffff"/>
                             <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:id="@+id/deviceName"
-                                    android:layout_alignParentRight="true"
+                                    android:clickable="true"
+                                    android:layout_toLeftOf="@+id/cominupdatename"
+                                    android:layout_marginRight="5dp"
                                     android:layout_centerVertical="true"
                                     android:text="HEKR-01"
                                     android:textColor="#ffffffff"/>
+                            <ImageView
+                                    android:id="@+id/cominupdatename"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:background="@drawable/comin"
+                                    android:clickable="true"/>
 
                             <View   android:layout_width="match_parent"
                                     android:layout_height="0.5dp"
@@ -108,7 +119,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
-                                android:text="设备品牌"
+                                android:text="@string/set_deviceBrand_tip"
                                 android:textColor="#ffffffff"/>
                             <TextView
                                 android:layout_width="wrap_content"
@@ -135,7 +146,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
-                                android:text="设备型号"
+                                android:text="@string/set_deviceType_tip"
                                 android:textColor="#ffffffff"/>
                             <TextView
                                 android:layout_width="wrap_content"
@@ -162,7 +173,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
-                                android:text="固件版本"
+                                android:text="@string/set_firmwareVersion_tip"
                                 android:textColor="#ffffffff"/>
                             <TextView
                                 android:layout_width="wrap_content"
@@ -188,20 +199,26 @@
                     android:layout_height="0dp"
                     android:layout_weight="0.42"
                     android:layout_marginRight="40px"
-                    android:layout_marginLeft="40px">
-                    <Button android:layout_width="match_parent"
+                    android:layout_marginLeft="40px"
+                    android:id="@+id/bottom_button">
+                    <TextView android:layout_width="match_parent"
                             android:layout_height="56dp"
-                            android:layout_marginTop="171px"
+                            android:gravity="center"
+                            android:layout_above="@+id/update"
+                            android:layout_marginBottom="20dp"
                             android:id="@+id/control"
-                            android:text="进入控制面板"
+                            android:clickable="true"
+                            android:text="@string/set_button_control"
                             android:textColor="#ffffffff"
                             android:background="#ff32bef2"/>
-                    <Button android:layout_width="match_parent"
+                    <TextView android:layout_width="match_parent"
                         android:layout_height="56dp"
+                        android:gravity="center"
                         android:id="@+id/update"
-                        android:layout_below="@+id/control"
-                        android:layout_marginTop="56px"
-                        android:text="已更新设备"
+                        android:clickable="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_alignParentBottom="true"
+                        android:text="@string/set_button_not_need_updateDevice"
                         android:textColor="#ffffffff"
                         android:background="#fff34141"
                         />

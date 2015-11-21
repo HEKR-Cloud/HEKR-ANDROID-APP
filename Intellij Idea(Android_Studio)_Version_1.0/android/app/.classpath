@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/Android API 21 Platform"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/Android API 19 Platform"/>
 	<classpathentry kind="src" path="build/generated/source/r/AndroidMarket/debug"/>
 	<classpathentry kind="src" path="build/generated/source/aidl/AndroidMarket/debug"/>
 	<classpathentry kind="src" path="build/generated/source/buildConfig/AndroidMarket/debug"/>
@@ -56,15 +56,10 @@
 	<classpathentry kind="src" path="src/androidTest/jni"/>
 	<classpathentry kind="src" path="src/androidTest/rs"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/fastjson-1.1.22"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/wspackage"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/support-v4-19.0.1"/>
-	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/xwalk_core_library-12.41.296.9"/>
-	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/GetuiExt-2.0.3"/>
-	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/commons-lang3-3.3.2"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/lambdaTM2.0"/>
-	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/umeng-analytics-v5.5.3"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/appcompat-v7-19.0.1"/>
-	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/GetuiSDK2.6.0.0"/>
-	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/analytics-5.5.3"/>
-	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/jshybugger-library-4.5.8"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/xwalk_core_library-15.44.384.12-"/>
 	<classpathentry kind="output" path="build/intermediates/classes/AndroidMarket/debug"/>
 </classpath>

@@ -2,14 +2,16 @@ package com.hekr.android.app.util;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 
 /**
  * Created by xubukan on 2015/3/24.
  */
 public class MySettingsHelper {
+
     private static String setting_user = "";
     public static String getCookieUser(){
-        if(setting_user!=null&&setting_user!=""){
+        if(!TextUtils.isEmpty(setting_user)){
             return setting_user;
         }else
         {

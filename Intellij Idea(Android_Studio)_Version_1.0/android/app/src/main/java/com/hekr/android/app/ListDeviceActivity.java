@@ -13,6 +13,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.*;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
@@ -28,6 +29,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.text.SimpleDateFormat;
@@ -35,36 +37,46 @@ import java.text.SimpleDateFormat;
 
 public class ListDeviceActivity extends Activity  {
 
-    public  static Handler listHandler;
-    private ListView listView;            //展示设备和设备信息的控件
-    private List<DeviceSummary> lData;     //存放设备信息的类
-    private MyAdapter mAdapter;            //listView的自定义适配器
-    private CustomProgress listProgressBar;//启动线程给用户交互的转圈
-    private BroadcastReceiver listRefreshReceiver;//广播
-    private static boolean isEmpty;       //lData是否有数据
-    final static String TAG="MyLog";      //log日志名
-    private boolean flag;
-    private Typeface face;//字体
-    public int MID;
+    public final static String TAG="MyLog";
+
+    public static Handler listHandler;
+    //展示设备和设备信息的控件
+    private ListView listView;
+    //存放设备信息的类
+    private List<DeviceSummary> lData;
+    //listView的自定义适配器
+    private MyAdapter mAdapter;
+    //启动线程转动条
+    private CustomProgress listProgressBar;
+    private BroadcastReceiver listRefreshReceiver;
+
+    //字体
+    private Typeface face;
     private HekrUser hekrUser;
-    private int count=0;
 
-    private PullToRefreshListView newPullListView;//刷新view
-    private SimpleDateFormat mDateFormat = new SimpleDateFormat("MM-dd HH:mm");//下拉刷新中的时间刷新
+    //刷新view
+    private PullToRefreshListView newPullListView;
+    //下拉刷新中的时间刷新
+    private SimpleDateFormat mDateFormat = new SimpleDateFormat("MM-dd HH:mm");
 
+    private AssetsDatabaseManager mg;
+
+    private SQLiteDatabase db;
+
+
+    @Override
     protected void onCreate(Bundle savedInstanceState){
 
         super.onCreate(savedInstanceState);
-        Log.i("LifeCycle", "ListDeviceActivity--onCreate()被触发");
         newPullListView = new PullToRefreshListView(ListDeviceActivity.this);
         setContentView(newPullListView);
 
-        newPullListView.setPullLoadEnabled(false);// 上拉加载不可用
-        newPullListView.setScrollLoadEnabled(false); // 滚动到底自动加载不可用
+        newPullListView.setPullLoadEnabled(false);
+        newPullListView.setScrollLoadEnabled(false);
 
-        final String[] items = {"设置", "删除", "取消"};
+        final String[] items = {getResources().getString(R.string.list_set), getResources().getString(R.string.list_delete), getResources().getString(R.string.list_cancel)};
 
-        lData = initData();//初始化设备数据
+        lData = initData();
         //生成一个listView
         listView=newPullListView.getRefreshableView();
         //设置listView的属性
@@ -75,6 +87,9 @@ public class ListDeviceActivity extends Activity  {
         //自定义的适配器
         mAdapter = new MyAdapter(this);
         listView.setAdapter(mAdapter);
+
+        mg = AssetsDatabaseManager.getManager();
+        db = mg.getDatabase("db");
 
         newPullListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
             @Override
@@ -95,7 +110,7 @@ public class ListDeviceActivity extends Activity  {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                if(lData.get(position).getOnline()==1) {
+                if(!lData.isEmpty()&&lData.get(position).getOnline()==1) {
                     Intent it = new Intent();
                     if (lData.get(position).getDetail() != null) {
                         it.putExtra("detail", lData.get(position).getDetail());
@@ -108,32 +123,37 @@ public class ListDeviceActivity extends Activity  {
                 }
             }
         });
-        //在主线程中发起http请求
-        //StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads().detectDiskWrites().detectNetwork().penaltyLog().build());
-        //StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects().detectLeakedClosableObjects().penaltyLog().penaltyDeath().build());
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int position, long l) {
                 new AlertDialog.Builder(ListDeviceActivity.this)
-                        .setTitle("选择功能")
+                        .setTitle(getResources().getString(R.string.list_alert_dialog_title))
                         .setItems(items,new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
-                        if(items[i].equals("设置")){
+                        if(items[i].equals(getResources().getString(R.string.list_set))){
                             if(dialog!=null){
                                 dialog.cancel();
                             }
-                            Intent r=new Intent();
-                            if (lData.get(position).getTid() != null) {
-                                r.putExtra("tid", lData.get(position).getTid());
+                            if(!lData.isEmpty()&&lData.get(position).getOnline()==1) {
+                                Intent r = new Intent();
+                                if (lData.get(position).getTid() != null) {
+                                    r.putExtra("tid", lData.get(position).getTid());
+                                }
+                                if (lData.get(position).getDetail() != null) {
+                                    r.putExtra("detail", lData.get(position).getDetail());
+                                }
+                                if (lData.get(position).getName() != null) {
+                                    r.putExtra("name", lData.get(position).getName());
+                                }
+                                r.setClass(ListDeviceActivity.this, SetActivity.class);
+                                startActivity(r);
                             }
-                            if (lData.get(position).getDetail() != null) {
-                                r.putExtra("detail", lData.get(position).getDetail());
+                            else{
+                                Toast.makeText(ListDeviceActivity.this,getResources().getString(R.string.list_offline_device_un_rename_tip),Toast.LENGTH_SHORT).show();
                             }
-                            r.setClass(ListDeviceActivity.this,RenameDeviceActivity.class);
-                            startActivity(r);
                         }
-                        if (items[i].equals("删除")){
+                        if (items[i].equals(getResources().getString(R.string.list_delete))){
                             if(dialog!=null){
                                 dialog.cancel();
                             }
@@ -142,10 +162,9 @@ public class ListDeviceActivity extends Activity  {
 
                                 @Override
                                 protected Boolean doInBackground(Integer... integers) {
-                                    if(lData.get(position).getOnline()==1){
+                                    if(!lData.isEmpty()&&lData.get(position).getOnline()==1){
                                         boolean flag;
                                         flag=hekrUser.removeDevice(lData.get(position).getTid());
-                                        //Log.d(TAG, "删除的tid:" + lData.get(position).getTid() + "删除函数返回值:" + hekrUser.removeDevice(lData.get(position).getTid()));
                                         return flag;
                                     }
                                     else {
@@ -160,22 +179,29 @@ public class ListDeviceActivity extends Activity  {
                                 protected void onPostExecute(Boolean aBoolean) {
                                     super.onPostExecute(aBoolean);
                                     if(aBoolean){
-                                        lData.remove(position);
-                                        mAdapter.notifyDataSetChanged();
-                                        Toast.makeText(ListDeviceActivity.this,"删除成功！",Toast.LENGTH_SHORT).show();
+
+                                        int i=0;
+                                        Iterator <DeviceSummary> it = lData.iterator();
+                                        while(it.hasNext())
+                                        {
+                                            if(lData.get(position).equals(it.next()))
+                                            {
+                                                it.remove();
+                                                i++;
+                                                Log.i(TAG,"匹配次数："+i);
+                                                mAdapter.notifyDataSetChanged();
+                                                break;
+                                            }
+                                        }
+                                        Toast.makeText(ListDeviceActivity.this,getResources().getString(R.string.list_delete_success_tip),Toast.LENGTH_SHORT).show();
                                     }
                                     else{
-                                        Toast.makeText(ListDeviceActivity.this,"删除失败！",Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(ListDeviceActivity.this,getResources().getString(R.string.list_delete_fail_tip),Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             }.execute();
-//                          if(hekrUser.removeDevice(lData.get(position).getTid())){
-//                               Toast.makeText(ListDeviceActivity.this,"删除成功",Toast.LENGTH_SHORT).show();
-//                          }else{
-//                               Toast.makeText(ListDeviceActivity.this,"删除失败",Toast.LENGTH_SHORT).show();
-//                          }
                         }
-                        if(items[i].equals("取消")){
+                        if(items[i].equals(getResources().getString(R.string.list_cancel))){
                             if(dialog!=null){
                                 dialog.cancel();
                             }
@@ -187,7 +213,8 @@ public class ListDeviceActivity extends Activity  {
         });
         ConnectivityManager mConnectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = mConnectivityManager.getActiveNetworkInfo();
-        if(netInfo != null && netInfo.isAvailable()) {
+        if(netInfo != null && netInfo.isAvailable())
+        {
             listProgressBar = CustomProgress.show(ListDeviceActivity.this, getResources().getString(R.string.loading_device).toString(), true, null);
         }
         listHandler = new Handler()
@@ -197,74 +224,61 @@ public class ListDeviceActivity extends Activity  {
                 newPullListView.onPullDownRefreshComplete();
                 setLastUpdateTime();
                 Bundle data = msg.getData();
-                lData.clear();
-                //The content of the adapter has changed but ListView did not receive a notification.
-                // Make sure the content of your adapter is not modified from a background thread, but only from the UI thread。
+                if(!lData.isEmpty()){
+                    lData.clear();
+                }
+
                 if(mAdapter!=null){
                     mAdapter.notifyDataSetChanged();
                 }
                 String json_str = data.getString("json");
-                //Log.i("MyLog","从服务器获取的设备json"+json_str);
                 if(json_str!=null){
                     try {
                         JSONArray json_list = new JSONArray(json_str);
-                        //Log.i("MyLog","json_list:"+json_list);
+
                         for (int i=0;i<json_list.length();i++){
                             JSONObject item = json_list.getJSONObject(i);
 
                             DeviceSummary summary = new DeviceSummary();
                             if(item.has("detail")){
                                 summary.setDetail(item.getString("detail"));
-                                //Log.d("MyLog","detail数据:"+summary.getDetail());
+
                             }
-                            //else{
-                                //当detail为空时默认给一条detail
-                                //String moren="(\"mid\" 0 \"pid\" 0 \"cid\" 0 )";
-                                //summary.setDetail(moren);
-                                //Log.d("MyLog","detail数据：为空");
-                            //}
                             if(item.has("state")){
                                 summary.setState(item.getString("state"));
-                                //Log.d("MyLog","State数据:"+summary.getState());
+
                             }
                             else{
                                 summary.setState(null);
                             }
                             if(item.has("name")){
-                                //summary.setName(item.getString("name") == null ? "未命名设备" : item.getString("name"));
+
                                 summary.setName(item.getString("name") == null ? null : item.getString("name"));
-                                //Log.d("MyLog","name:"+summary.getName());
+
                             }else{
-                                //summary.setName("未命名设备");
+
                                 summary.setName(null);
-                                //Log.d("MyLog","name为为命名设备");
+
                             }
                             if(item.has("online")){
                                 summary.setOnline(item.getInt("online"));
-                                //Log.d("MyLog","在线状态："+summary.getOnline().toString());
                             }
                             else{
                                 summary.setOnline(0);
-                                //Log.d("MyLog","在线状态："+"Online为0");
                             }
                             if(item.has("tid")){
                                 summary.setTid(item.getString("tid"));
-                                //Log.d("MyLog","tid:"+summary.getTid().toString());
                             }
 
                             if(item.has("uid")){
                                 summary.setUid(item.getString("uid"));
-                                //Log.d("MyLog","uid:"+summary.getUid());
                             }
                             if(item.has("time")){
                                 summary.setTime(item.getLong("time"));
-                                //Log.d("MyLog","时间："+summary.getTime().toString());
                             }
-                            //Log.i("MyLog",summary.toString());
-                            if(!"".equals(summary.getDetail())){
+                            if(!TextUtils.isEmpty(summary.getDetail())){
                                 lData.add(summary);
                             }
-                            //Log.i("MyLog",lData.toString());
                         }
 
                         mAdapter.notifyDataSetChanged();
@@ -281,8 +295,7 @@ public class ListDeviceActivity extends Activity  {
         face = Typeface.createFromAsset(getAssets(),"font/hanxizhongyuantong.ttf");
     }
 
-    private void createReceiver()
-    {
+    private void createReceiver() {
         // 创建网络监听广播
         listRefreshReceiver = new BroadcastReceiver()
         {
@@ -298,7 +311,7 @@ public class ListDeviceActivity extends Activity  {
                     if(netInfo != null && netInfo.isAvailable())
                     {
                         //网络连接
-                        String name = netInfo.getTypeName();
+                        //String name = netInfo.getTypeName();
                         ThreadPool threadPool = ThreadPool.getThreadPool();
                         threadPool.addTask(ListDeviceActivity.lRunnable);
                         if(netInfo.getType()==ConnectivityManager.TYPE_WIFI)
@@ -324,9 +337,9 @@ public class ListDeviceActivity extends Activity  {
         registerReceiver(listRefreshReceiver, intentFilter);
 
     }
+
     //刷新时间
-    private void setLastUpdateTime()
-    {
+    private void setLastUpdateTime() {
         String text = formatDateTime(System.currentTimeMillis());
         newPullListView.setLastUpdatedLabel(text);
     }
@@ -350,18 +363,18 @@ public class ListDeviceActivity extends Activity  {
             listHandler.sendMessage(msg);
         }
     };
-    private List<DeviceSummary> initData(){
+    private List<DeviceSummary> initData() {
         List<DeviceSummary> list = new ArrayList<DeviceSummary>();
         //ToDO 加载本地数据
         return list;
     }
 
-    public final class ViewHolder{
+    public final class ViewHolder {
         public ImageView img;
         public TextView name;
         public TextView statusOne;
         public TextView message;
-        public LinearLayout maomao;
+        public LinearLayout device_item_ly;
     }
 
     public class MyAdapter extends BaseAdapter {
@@ -372,8 +385,12 @@ public class ListDeviceActivity extends Activity  {
             //根据context上下文加载布局，这里的是ListDeviceActivity本身，即this
             this.mInflater = LayoutInflater.from(context);
         }
+
         @Override
         public int getCount() {
+            if(lData.isEmpty()){
+                return 0;
+            }
             return lData.size();
         }
 
@@ -392,8 +409,7 @@ public class ListDeviceActivity extends Activity  {
         }
 
         @Override
-        public View getView(final int position, View convertView, final ViewGroup parent)
-        {
+        public View getView(final int position, View convertView, final ViewGroup parent) {
 
             ViewHolder holder = new ViewHolder();
             //根据自定义的Item布局加载布局
@@ -404,23 +420,25 @@ public class ListDeviceActivity extends Activity  {
             holder.name= (TextView) convertView.findViewById(R.id.devicename);
             holder.statusOne=(TextView) convertView.findViewById(R.id.statusone);
             holder.message=(TextView) convertView.findViewById(R.id.message);
-            holder.maomao= (LinearLayout) convertView.findViewById(R.id.maomao);
+            holder.device_item_ly= (LinearLayout) convertView.findViewById(R.id.device_item_ly);
 
 
             holder.name.setTypeface(face);
-            if(lData.size()!=0)
+            if(!lData.isEmpty()&&lData.size()!=0)
             {
                 //设备图片
-                Bitmap bitmap = getIcon(lData.get(position));
-                if(bitmap!=null){
-                    holder.img.setImageBitmap(bitmap);
+                if(lData.get(position)!=null){
+                    Bitmap bitmap = getIcon(lData.get(position));
+                    if(bitmap!=null){
+                        holder.img.setImageBitmap(bitmap);
+                    }
                 }
                 //设备名称
-                if(lData.get(position).getName()==null||  "".equals(lData.get(position).getName())) {
+                if(TextUtils.isEmpty(lData.get(position).getName())) {
                     String stid = "";
                     try {
                         stid = lData.get(position).getTid();
-                        if(stid.length()>2&&stid!=null)
+                        if(stid!=null&&stid.length()>2)
                         {
                             stid = " "+stid.substring(stid.length() - 2);
                         }
@@ -438,12 +456,12 @@ public class ListDeviceActivity extends Activity  {
                     if (getPower(lData.get(position))==1)
                     {
                         holder.statusOne.setTextColor(0xffffffff);
-                        holder.statusOne.setText(getResources().getString(R.string.open).toString());
+                        holder.statusOne.setText(getResources().getString(R.string.open));
                     }
                     else
                     {
                         holder.statusOne.setTextColor(0x35ffffff);
-                        holder.statusOne.setText(getResources().getString(R.string.close).toString());
+                        holder.statusOne.setText(getResources().getString(R.string.close));
                     }
                 }else{
                     //服务器下发数据当中没有power字段则显示离线
@@ -463,7 +481,7 @@ public class ListDeviceActivity extends Activity  {
                         }
                     }else{
                         holder.message.setTextColor(0x35ffffff);
-                        holder.message.setText(getResources().getString(R.string.offline).toString());
+                        holder.message.setText(getResources().getString(R.string.offline));
                     }
                 }
                 else{
@@ -474,24 +492,13 @@ public class ListDeviceActivity extends Activity  {
             return convertView;
         }
 
-
         //获取设备图片
-        public Bitmap getIcon(DeviceSummary device)
-        {
+        public Bitmap getIcon(DeviceSummary device) {
             String detail = device.getDetail();
             String iconUrl="";
-            //Log.i(ListDeviceActivity.class.getSimpleName(),"detatil===:"+detail);
-            AssetsDatabaseManager mg = AssetsDatabaseManager.getManager();
-            if(detail!=null){
+            if(!TextUtils.isEmpty(detail)){
                 iconUrl = mg.getIconUrlByCid(""+ getDetailMap(detail).get("cid"));
             }
-            //Log.i("MyLog","数据库中取出的url:"+iconUrl);
-            //Log.i(ListDeviceActivity.class.getSimpleName(),"cid===:"+getDetailMap(detail).get("cid"));
-            //Log.i(ListDeviceActivity.class.getSimpleName(),"iconUrl===:"+iconUrl);
-//          if(iconUrl==null||iconUrl=="")
-//          {
-//              return null;
-//          }
             InputStream is=null;
             InputStream iis=null;
             InputStream iiis=null;
@@ -504,12 +511,8 @@ public class ListDeviceActivity extends Activity  {
 
             } catch (Exception e)
             {
-                count=count+1;
-                Log.i("MyLog","从sd获取图片！"+count);
                 try{
-                    //Log.i("MyLog","有进入执行e下！");
                     Bitmap bitmap = BitmapFactory.decodeFile(iconUrl);
-                    //Log.i("MyLog","bitmap："+bitmap);
                     if(bitmap==null){
                         iis=getAssets().open("product/weizhi.png");
                         Bitmap citmap = BitmapFactory.decodeStream(iis);
@@ -519,42 +522,52 @@ public class ListDeviceActivity extends Activity  {
                         return bitmap;
                     }
                 }catch (Exception ee){
-                    Log.d("MyLog","从SD卡读取图片失败");
                     try {
-                        Log.i("MyLog","有进入执行ee下！");
                         iiis=getAssets().open("product/weizhi.png");
                         Bitmap bitmap = BitmapFactory.decodeStream(iiis);
                         iiis.close();
                         return bitmap;
                     } catch (Exception eee)
                     {
-                        Log.i("MyLog","有进入执行eee下！");
-                        Log.i(ListDeviceActivity.class.getSimpleName(),"添加未知设备出错！");
                         return null;
                     }
                 }
 
             }
+            finally {
+                try {
+                    if(is!=null){
+                        is.close();
+                    }
+                    if(iis!=null){
+                        iis.close();
+                    }
+                    if(iiis!=null){
+                        iiis.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
 
         }
+
         //设备名称
-        public String getName(DeviceSummary device)
-        {
+        public String getName(DeviceSummary device) {
             String detail = device.getDetail();
-            //Log.i(ListDeviceActivity.class.getSimpleName(),"detail===:"+detail);
+            String countryCategory=getResources().getConfiguration().locale.getCountry();
+            Cursor cursor = null;
             String cid="";
-            if(detail!=null){
+
+            if(!TextUtils.isEmpty(detail)){
                 cid=getDetailMap(detail).get("cid")+"";
             }
 
-            if(cid=="")
+            if("".equals(cid)||"null".equals(cid))
             {
                 return "unknow";
             }
-            AssetsDatabaseManager mg = AssetsDatabaseManager.getManager();
-            SQLiteDatabase db = mg.getDatabase("db");
-            String countryCategory=getResources().getConfiguration().locale.getCountry();
-            Cursor cursor = null;
+
             if(countryCategory.equals("CN")){
                 try {
                     cursor = db.rawQuery("select name from category where id=?",
@@ -592,26 +605,13 @@ public class ListDeviceActivity extends Activity  {
 
         }
 
-        public String getCid(DeviceSummary device) {
-            String detail = device.getDetail();
-            String cid="";
-            if(detail!=null){
-                cid=""+ getDetailMap(detail).get("cid");
-            }
-            if (cid == "") {
-                return null;
-            }
-            return cid;
-        }
         //设备开关状态
-        public int getPower(DeviceSummary device)
-        {
+        public int getPower(DeviceSummary device) {
             String state = device.getState();
-            if(!"".equals(state)&&null!=state)
+            if(!TextUtils.isEmpty(state))
             {
-                if(!"".equals(getDetailMap(state).get("power")+"")&&getDetailMap(state).get("power")!=null)
+                if(!TextUtils.isEmpty(getDetailMap(state).get("power").toString().trim()))
                 {
-                    //Log.i("MyLog","11111111111111111111111111111"+getDetailMap(state).get("power")+"");
                     if(((com.lambdatm.runtime.lang.Number)getDetailMap(state).get("power")).intValue()==0||((com.lambdatm.runtime.lang.Number)getDetailMap(state).get("power")).intValue()==1)
                     {
                         return ((com.lambdatm.runtime.lang.Number)getDetailMap(state).get("power")).intValue();
@@ -625,15 +625,15 @@ public class ListDeviceActivity extends Activity  {
             return 2;
         }
 
-        public Object returnDisplayData(DeviceSummary device){
+        public Object returnDisplayData(DeviceSummary device) {
             if(device.getState()!=null)
             {
                 return returnDisplayData( getDetailMap (device.getState()));
             }
             return null;
         }
-        public Object returnDisplayData(Map state)
-        {
+
+        public Object returnDisplayData(Map state) {
             try {
                 if (state.containsKey("humidity")) {
                     double a = ((com.lambdatm.runtime.lang.Number) state.get("humidity")).doubleValue();
@@ -659,23 +659,20 @@ public class ListDeviceActivity extends Activity  {
     public static List<Object> getDetailList(String detail) {
         try{
 
-        if (!"".equals(detail) && detail != null) {
+        if (!TextUtils.isEmpty(detail)) {
             List stateList = Util.tolist((Cell) Base.read.pc(detail, null));
-            //Log.i("MyLog", "stateList:" + stateList);
             return stateList;
         }
         }catch (Exception e){
-            //Log.i("MyLog","解析不了为list："+e.getMessage());
             return Util.tolist((Cell) Base.read.pc("(\"mid\" 0 \"pid\" 0 \"cid\" 0 )", null));
         }
         return Util.tolist((Cell) Base.read.pc("(\"mid\" 0 \"pid\" 0 \"cid\" 0 )", null));
     }
-    //例如：将 "detail": "(\"mid\" 3 \"pid\" 9 \"cid\" 13 \"mname\" \"__XSJ_450__\" )"
-    //切割成list然后变成map
-    public static Map<Object, Object> getDetailMap(String detail)
-    {
-        if(!"".equals(detail)&&detail!=null){
-            //Log.i("MyLog","detail:"+detail);
+
+    public static Map<Object, Object> getDetailMap(String detail) {
+
+        if(!TextUtils.isEmpty(detail)){
+
             List stateList = getDetailList(detail);
             if(stateList!=null&&stateList.size()>=2){
                 Map<Object, Object> detailMap=new HashMap<Object, Object>();
@@ -692,16 +689,22 @@ public class ListDeviceActivity extends Activity  {
         return null;
     }
 
-    //设置屏幕为竖屏
-    protected void onResume()
-    { /** * 设置为竖屏 */
+    @Override
+    protected void onResume() {
         createReceiver();
         if(getRequestedOrientation()!= ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT)
         {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
         }
-        Log.i("LifeCycle","ListDeviceActivity--onResume()被触发");
         super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (listProgressBar!=null&&listProgressBar.isShowing()) {
+            listProgressBar.dismiss();
+        }
     }
 
     @Override
@@ -710,6 +713,5 @@ public class ListDeviceActivity extends Activity  {
             unregisterReceiver(listRefreshReceiver);
         }
         super.onDestroy();
-        Log.i("LifeCycle","ListDeviceActivity--onDestroy()被触发");
     }
 }

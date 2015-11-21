@@ -1,13 +1,10 @@
 package com.hekr.android.app.util;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -29,8 +26,8 @@ public  class WifiAdmin
     // 定义一个WifiLock
     WifiManager.WifiLock mWifiLock;
 
-    private final static String TAG="MyLog";
-    // 构造器
+    private static final String TAG="MyLog";
+
     public WifiAdmin(Context context) {
         // 取得WifiManager对象
         mWifiManager = (WifiManager) context
@@ -40,7 +37,7 @@ public  class WifiAdmin
     }
 
     // 打开WIFI
-    public  void openWifi() {
+    public void openWifi() {
         if (!mWifiManager.isWifiEnabled()) {
             mWifiManager.setWifiEnabled(true);
         }
@@ -165,11 +162,13 @@ public  class WifiAdmin
 
     // 断开指定ID的网络
     public void disconnectWifi(int netId) {
+
         mWifiManager.disableNetwork(netId);
         mWifiManager.disconnect();
     }
-    public static WifiConfiguration CreateWifiInfo(String SSID, String Password,int Type)
-    {
+
+    public static WifiConfiguration CreateWifiInfo(String SSID, String Password,int Type) {
+
         WifiConfiguration config = new WifiConfiguration();
         config.allowedAuthAlgorithms.clear();
         config.allowedGroupCiphers.clear();
@@ -188,11 +187,6 @@ public  class WifiAdmin
         {
             config.hiddenSSID = true;
             config.wepKeys[0]= "\""+Password+"\"";
-//            config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.SHARED);
-//            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
-//            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
-//            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
-//            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);
             config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
             config.wepTxKeyIndex = 0;
         }
@@ -201,28 +195,21 @@ public  class WifiAdmin
         {
             config.preSharedKey = "\""+Password+"\"";
             config.hiddenSSID = true;
-//            config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
-//            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
             config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
-//            config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
-//            config.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
             config.status = WifiConfiguration.Status.ENABLED;
         }//eap
         if(Type == 3)
         {
             config.preSharedKey = "\""+Password+"\"";
             config.hiddenSSID = true;
-//            config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
-//            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
             config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_EAP);
-//            config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
-//            config.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
             config.status = WifiConfiguration.Status.ENABLED;
         }
         return config;
     }
-    public static String clearSSID(String ssid)
-    {
+
+    public static String clearSSID(String ssid) {
+
         int deviceVersion = android.os.Build.VERSION.SDK_INT;
         if (ssid == null)
         {
@@ -245,20 +232,7 @@ public  class WifiAdmin
         //获取Android版本号
     }
 
-    public boolean isWifi5G(){
-        return isWifi5G( mWifiInfo.getFrequency() );
-    }
-
-    public static boolean isWifi5G(int frequency){
-        int channel = getChannelByFrequency(frequency);
-        if( channel > 14 ){
-            return true;
-        }else
-            return false;
-    }
-
-    public static int getEnncryption(String capabilities)
-    {
+    public static int getEnncryption(String capabilities) {
         if (!TextUtils.isEmpty(capabilities))
         {
 
@@ -278,6 +252,7 @@ public  class WifiAdmin
             return 0;
         }
     }
+
     public static int getChannelByFrequency(int frequency) {
         int channel = -1;
         switch (frequency) {
