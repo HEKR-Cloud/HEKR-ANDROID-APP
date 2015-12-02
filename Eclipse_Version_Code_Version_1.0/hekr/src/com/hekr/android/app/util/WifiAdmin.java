@@ -188,11 +188,6 @@ public  class WifiAdmin
         {
             config.hiddenSSID = true;
             config.wepKeys[0]= "\""+Password+"\"";
-//            config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.SHARED);
-//            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
-//            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
-//            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
-//            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);
             config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
             config.wepTxKeyIndex = 0;
         }
@@ -201,22 +196,14 @@ public  class WifiAdmin
         {
             config.preSharedKey = "\""+Password+"\"";
             config.hiddenSSID = true;
-//            config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
-//            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
             config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
-//            config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
-//            config.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
             config.status = WifiConfiguration.Status.ENABLED;
         }//eap
         if(Type == 3)
         {
             config.preSharedKey = "\""+Password+"\"";
             config.hiddenSSID = true;
-//            config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
-//            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
             config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_EAP);
-//            config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
-//            config.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
             config.status = WifiConfiguration.Status.ENABLED;
         }
         return config;
@@ -229,10 +216,8 @@ public  class WifiAdmin
             return null;
         } else
         {
-
             if (deviceVersion >= 17)
             {
-
                 if (ssid.startsWith("\"") && ssid.endsWith("\""))
                 {
                     ssid = ssid.substring(1, ssid.length() - 1);
@@ -244,10 +229,6 @@ public  class WifiAdmin
         }
         //获取Android版本号
     }
-
-    //public boolean isWifi5G(){
-        //return isWifi5G( mWifiInfo.getFrequency() );
-    //}
 
     public static boolean isWifi5G(int frequency){
         int channel = getChannelByFrequency(frequency);

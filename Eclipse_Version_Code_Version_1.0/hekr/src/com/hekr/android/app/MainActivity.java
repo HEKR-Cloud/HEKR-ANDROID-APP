@@ -23,10 +23,6 @@ import com.hekr.android.app.util.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.UnsupportedEncodingException;
-
-
 public class MainActivity extends ActivityGroup {
 
     private final static String TAG = "MyLog";
@@ -160,8 +156,6 @@ public class MainActivity extends ActivityGroup {
                             gloabData.setWifiStatus(false);
                             Log.i("MyLog","当前网络是否是wifi连接："+gloabData.isWifiStatus());
                             //有线网络
-                            //Toast.makeText(context,getResources().getString(R.string.checked_have_network).toString(),Toast.LENGTH_SHORT).show();
-
                         } else if (netInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
                             //3g网络
                             Global.isWIFI=false;
@@ -193,26 +187,7 @@ public class MainActivity extends ActivityGroup {
 
     //进入一键配置添加模块
     public void addDevice(View view) {
-        ConnectivityManager mConnectivityManager = (ConnectivityManager) getSystemService(context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo=null;
-        if(mConnectivityManager!=null){
-            networkInfo = mConnectivityManager.getActiveNetworkInfo();
-        }
-
-        if(networkInfo!=null&&networkInfo.getType()==ConnectivityManager.TYPE_WIFI){
-            Log.i(TAG,"wifi已经开了!");
-        }
-        else{
-            wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
-            try {
-                wifiManager.setWifiEnabled(true);
-            } catch (Exception e) {
-                Log.i("MyLog", "不允许打开wifi");
-            }
-        }
-
-
-        if (TextUtils.isEmpty(Global.ACCESSKEY) )
+        if (TextUtils.isEmpty(Global.ACCESSKEY))
         {
             Toast.makeText(MainActivity.this, getResources().getString(R.string.get_user_message), Toast.LENGTH_SHORT).show();
         } else {
@@ -274,7 +249,6 @@ public class MainActivity extends ActivityGroup {
                     key.setType(deviceAccesskeyJson.getString("type"));
                     key.setToken(deviceAccesskeyJson.getString("token"));
                     Global.ACCESSKEY = deviceAccesskeyJson.getString("token");
-                    //Log.i(TAG,"mainHandler_DEVICEACCESSKEY:"+Global.ACCESSKEY);
                     Global.uid=deviceAccesskeyJson.getString("uid");
                 } catch (JSONException e) {
                     Log.i(TAG, "mainHandler中设置deviceAccesskey出现异常：" + e.getMessage());
@@ -284,7 +258,6 @@ public class MainActivity extends ActivityGroup {
                 try {
                     JSONObject UserAccesskeyJson = new JSONObject(userAccessKey_str);
                     Global.USERACCESSKEY = UserAccesskeyJson.getString("token");
-                    //Log.i("MyLog","mainHandler_USERACCESSKEY:"+Global.USERACCESSKEY);
                 } catch (JSONException e) {
                     Log.i(TAG, "mainHandler中设置userAccesskey出现异常：" + e.getMessage());
                 }
@@ -303,7 +276,7 @@ public class MainActivity extends ActivityGroup {
     }
 
     @Override
-    protected void onResume() { /** * 设置为竖屏 */
+    protected void onResume() { 
         Log.i("LifeCycle", "MainActivity--onResume()被触发");
         if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);

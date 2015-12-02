@@ -92,17 +92,11 @@ public class HekrUser {
     //在线设备删除
     public boolean removeDevice(String tid){
         String respstr = HttpUtil.doGet( httphost+"/device/clearAccesskey.json?tid="+tid +"&" + _csrftoken_ , cookie);
-        //Log.i("coco","_csrftoken_:"+_csrftoken_);
-        //Log.i("coco","cookie:"+cookie);
-        //Log.i("MyLog","respstr:"+respstr);
         return isSuccess(respstr);
     }
     //离线设备删除
     public boolean deleteDevice(String tid){
         String respstr = HttpUtil.doGet( httphost+"/device/delete.json?tid="+tid +"&" + _csrftoken_ , cookie);
-        //Log.i("coco","_csrftoken_:"+_csrftoken_);
-        //Log.i("coco","cookie:"+cookie);
-        //Log.i("MyLog","respstr:"+respstr);
         return isSuccess(respstr);
     }
 
@@ -177,13 +171,11 @@ public class HekrUser {
 
     public boolean devcall(String tid,String code){
         String c = "(@devcall \""+tid+"\"  "+code+" (lambda x x) )";
-        //  todo
         return false;
     }
 
     public boolean devcallUartData(String tid,String uartdata){
         String code = "(@devcall \""+tid+"\" (uartdata \""+uartdata+"\") (lambda x x) )";
-        // todo
         return true;
     }
 
@@ -202,7 +194,7 @@ public class HekrUser {
             return false;
         }
     }
-    private static String getRandomString(int length) { //length表示生成字符串的长度
+    private static String getRandomString(int length) {
         String base = "abcdefghijklmnopqrstuvwxyz0123456789";
         Random random = new Random();
         StringBuffer sb = new StringBuffer();

@@ -7,8 +7,6 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,19 +20,15 @@ import com.hekr.android.app.util.HttpHelper;
 import com.hekr.android.app.util.UpdateManager;
 import android.util.Log;
 
-import java.util.Iterator;
-
 /**
  * Created by xubukan on 2015/3/18.
  */
-public class LoginActivity extends Activity
-{
+public class LoginActivity extends Activity {
     private String os;
     private String osversion;
     private String type;
     private String appversion;
     private long firstime = 0;
-    private float ratio;
     public static Context globalContext;
     Handler loginHandler=new Handler()
     {
@@ -69,7 +63,6 @@ public class LoginActivity extends Activity
         type="phone";
         appversion=getVerName(LoginActivity.this);
 
-        Log.d("MyLog", os+"---------"+osversion+"---------"+type+"---------"+getVerName(LoginActivity.this));
         final String updateUrl="http://update.hekr.me/appupdate?os="+os+"&osversion="+osversion+"&appversion="+appversion+"&type="+type;
         Runnable updateRunnable=new Runnable()
         {
@@ -169,8 +162,7 @@ public class LoginActivity extends Activity
         startActivity(it);
         finish();
     }
-    protected void onResume()
-    { /** * 设置为竖屏 */
+    protected void onResume(){ 
         if(getRequestedOrientation()!= ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT)
         {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);

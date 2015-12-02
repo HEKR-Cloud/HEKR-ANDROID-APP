@@ -1,7 +1,6 @@
 package com.hekr.android.app;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -10,17 +9,13 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.hekr.android.app.model.DeviceSummary;
 import com.hekr.android.app.util.AssetsDatabaseManager;
 import com.hekr.android.app.util.HekrUser;
-import com.hekr.android.app.util.HttpHelper;
 import com.hekr.android.app.util.MySettingsHelper;
 import com.lambdatm.runtime.lang.Cell;
 import com.lambdatm.runtime.lib.Base;
@@ -29,7 +24,6 @@ import com.lambdatm.runtime.util.Util;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 public class RenameDeviceActivity extends Activity implements OnClickListener{
 
@@ -118,7 +112,6 @@ public class RenameDeviceActivity extends Activity implements OnClickListener{
     public static Map<Object, Object> getDetailMap(String detail)
     {
         if(!"".equals(detail)&&detail!=null){
-            //Log.i("MyLog","detail:"+detail);
             List stateList = getDetailList(detail);
             if(stateList!=null&&stateList.size()>=2){
                 Map<Object, Object> detailMap=new HashMap<Object, Object>();
@@ -187,9 +180,8 @@ public class RenameDeviceActivity extends Activity implements OnClickListener{
 
         }
     }
-    //设置屏幕为竖屏
-    protected void onResume()
-    { /** * 设置为竖屏 */
+
+    protected void onResume(){ 
         if(getRequestedOrientation()!= ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT)
         {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);

@@ -60,9 +60,7 @@ public class HttpUtil {
         }
         try{
             DefaultHttpClient dhc = new DefaultHttpClient();
-            //http.setEntity();
             http.setEntity(new UrlEncodedFormEntity(params,HTTP.UTF_8));
-            // todo...
             HttpResponse res = dhc.execute(http);
             if (res.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
                 HttpEntity entity = res.getEntity();

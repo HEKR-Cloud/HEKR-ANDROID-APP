@@ -13,25 +13,17 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Looper;
-
-import java.net.DatagramPacket;
-
 import com.hekr.android.app.model.Global;
 import com.hekr.android.app.ui.CustomProgress;
 import com.hekr.android.app.util.HekrConfig;
-import com.hekr.android.app.util.ThreadPool;
-import com.hekr.android.app.util.UDPConfig;
 import com.hekr.android.app.util.WifiAdmin;
 
-import java.io.IOException;
 
 /**
  * Created by kj on 15/6/18.
@@ -70,7 +62,6 @@ public class HekrConfigActivity extends Activity {
             else {
                 if ("".equals(passwordText.getText().toString().trim())||passwordText.getText().toString().trim()==null) {
                     if (!"".equals(countryCategory) && countryCategory.equals("CN")) {
-                        //Toast.makeText(activity, "密码为空", Toast.LENGTH_SHORT).show();
                         AlertDialog.Builder builder = new AlertDialog.Builder(alertContext);
                         builder.setMessage("密码为空，确认继续添加吗?");
                         builder.setTitle("提示");
@@ -83,13 +74,10 @@ public class HekrConfigActivity extends Activity {
                                 if (lock != null) {
                                     lock.acquire();
                                 }
-
-                                //isConfigEnd = false;
                                 try {
                                     configProgressBar = CustomProgress.show(activity, activity.getResources().getString(R.string.adding_device).toString(), true, new DialogInterface.OnCancelListener() {
                                         @Override
                                         public void onCancel(DialogInterface dialogInterface) {
-                                            //isConfigEnd = true;
                                             if (hc != null) {
                                                 hc.stop();
                                             }
@@ -114,7 +102,6 @@ public class HekrConfigActivity extends Activity {
 
                                         if (ret != null) {
                                             //成功返回上一级
-                                            //Toast.makeText( activity , "SUCCESS", Toast.LENGTH_SHORT ).show();
                                             Intent i = new Intent(activity, MainActivity.class);
                                             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                             activity.startActivity(i);
@@ -144,7 +131,6 @@ public class HekrConfigActivity extends Activity {
                         builder.create().show();
                     }
                     else{
-                        //Toast.makeText(activity, "Empty password", Toast.LENGTH_SHORT).show();
                         AlertDialog.Builder builder = new AlertDialog.Builder(alertContext);
                         builder.setMessage("password to be empty, confirm continue to add?");
                         builder.setTitle("Prompt");
@@ -157,13 +143,10 @@ public class HekrConfigActivity extends Activity {
                                 if (lock != null) {
                                     lock.acquire();
                                 }
-
-                                //isConfigEnd = false;
                                 try {
                                     configProgressBar = CustomProgress.show(activity, activity.getResources().getString(R.string.adding_device).toString(), true, new DialogInterface.OnCancelListener() {
                                         @Override
                                         public void onCancel(DialogInterface dialogInterface) {
-                                            //isConfigEnd = true;
                                             if (hc != null) {
                                                 hc.stop();
                                             }
@@ -222,12 +205,10 @@ public class HekrConfigActivity extends Activity {
                         lock.acquire();
                     }
 
-                    //isConfigEnd = false;
                     try {
                         configProgressBar = CustomProgress.show(activity, activity.getResources().getString(R.string.adding_device).toString(), true, new DialogInterface.OnCancelListener() {
                             @Override
                             public void onCancel(DialogInterface dialogInterface) {
-                                //isConfigEnd = true;
                                 if (hc != null) {
                                     hc.stop();
                                 }
@@ -252,7 +233,6 @@ public class HekrConfigActivity extends Activity {
 
                             if (ret != null) {
                                 //成功返回上一级
-                                //Toast.makeText( activity , "SUCCESS", Toast.LENGTH_SHORT ).show();
                                 Intent i = new Intent(activity, MainActivity.class);
                                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 activity.startActivity(i);
@@ -296,7 +276,6 @@ public class HekrConfigActivity extends Activity {
                         if(netInfo.getType()==ConnectivityManager.TYPE_WIFI)
                         {
                             //WiFi网络
-                            //Toast.makeText(context,"",Toast.LENGTH_SHORT).show();
                             String nowWifi= WifiAdmin.clearSSID(wifiManager.getConnectionInfo().getSSID());
                             if(nowWifi!=null)
                             {
@@ -362,7 +341,7 @@ public class HekrConfigActivity extends Activity {
         doneButton = (ImageButton)findViewById(R.id.wifiset);
         softAPButton = (TextView)findViewById(R.id.softap);
 
-        wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);//获得系统wifi服务
+        wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
         ConnectivityManager connectManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         WifiAdmin wifiAdmin = new WifiAdmin(this);
         String ssid = wifiAdmin.getSSID()==null? "":wifiAdmin.getSSID();
@@ -376,9 +355,8 @@ public class HekrConfigActivity extends Activity {
 
         countryCategory=getResources().getConfiguration().locale.getCountry();
     }
-    //变成竖屏
-    protected void onResume()
-    { /** * 设置为横屏 */
+
+    protected void onResume() { 
         if(getRequestedOrientation()!= ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT)
         {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);

@@ -33,7 +33,7 @@ import java.util.*;
 import java.text.SimpleDateFormat;
 
 
-public class ListDeviceActivity extends Activity  {
+public class ListDeviceActivity extends Activity {
 
 	private static final String TAG="MyLog";
 	
@@ -48,10 +48,10 @@ public class ListDeviceActivity extends Activity  {
     private CustomProgress listProgressBar;
     //广播
     private BroadcastReceiver listRefreshReceiver;
-    //lData是否有数据
-    private static boolean isEmpty;             
+            
     private boolean flag;
-    private Typeface face;//字体
+    //字体
+    private Typeface face;
     public int MID;
     private HekrUser hekrUser;
     private int count=0;
@@ -517,8 +517,7 @@ public class ListDeviceActivity extends Activity  {
 
         }
         //设备名称
-        public String getName(DeviceSummary device)
-        {
+        public String getName(DeviceSummary device){
             String detail = device.getDetail();
             String cid="";
             if(detail!=null){
@@ -664,9 +663,7 @@ public class ListDeviceActivity extends Activity  {
         return null;
     }
 
-    //设置屏幕为竖屏
-    protected void onResume()
-    { /** * 设置为竖屏 */
+    protected void onResume(){ 
         createReceiver();
         if(getRequestedOrientation()!= ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT)
         {

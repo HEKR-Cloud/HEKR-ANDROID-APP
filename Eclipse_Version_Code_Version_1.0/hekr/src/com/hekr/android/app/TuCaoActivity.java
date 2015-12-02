@@ -1,13 +1,7 @@
 package com.hekr.android.app;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -16,12 +10,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
-
 import com.hekr.android.app.model.Global;
 import com.hekr.android.app.ui.CustomProgress;
 import com.hekr.android.app.util.HttpHelper;
 import com.hekr.android.app.util.ThreadPool;
-import com.hekr.android.app.util.WifiAdmin;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,7 +40,6 @@ public class TuCaoActivity extends Activity {
                         Message msg = new Message();
                         Bundle data = new Bundle();
                         data.putString("back", HttpHelper.doPost("http://poseido.hekr.me/tucao.json", userAccessKey, message));
-                        //Log.i("MyLog","runnable:backJson_str:"+HttpHelper.doPost("http://poseido.hekr.me/tucao.json", userAccessKey, message));
                         msg.setData(data);
                         sendHandler.sendMessage(msg);
                     }
@@ -75,7 +66,6 @@ public class TuCaoActivity extends Activity {
             }
 
             String backJson_str=data.getString("back");
-            //Log.i("MyLog","backJson_str:"+backJson_str);
             if(tucaoProgressBar!=null){
                 tucaoProgressBar.dismiss();
             }
@@ -102,9 +92,8 @@ public class TuCaoActivity extends Activity {
         super.onPause();
        
     }
-    //竖屏
-    protected void onResume()
-    { /** * 设置为竖屏 */
+
+    protected void onResume() {
         if(getRequestedOrientation()!= ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT)
         {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
@@ -114,12 +103,11 @@ public class TuCaoActivity extends Activity {
     }
     protected void onDestroy() {
         Log.i("LifeCycle", "TuCaoActivity--onDestroy()被触发");
-
         super.onDestroy();
     }
 
-    public void navBack(View view)
-    {
+    public void navBack(View view){
+    	
         this.finish();
     }
 }

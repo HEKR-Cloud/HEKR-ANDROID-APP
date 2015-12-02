@@ -46,8 +46,8 @@ public class HttpHelper {
     private static int timeoutConnection = 15000;
     private static int timeoutSocket = 15000;
 
-    public static String doGet(String url)
-    {
+    public static String doGet(String url){
+    	
         HttpGet http = new HttpGet(url+"_csrftoken_="+seed);      
         String CookieUser=MySettingsHelper.getCookieUser();
         
@@ -89,17 +89,15 @@ public class HttpHelper {
         return null;
     }
     //从服务器下载图片
-    public static InputStream getStreamFromURL(String imageURL)
-    {
+    public static InputStream getStreamFromURL(String imageURL){
         InputStream in=null;
         try {
             URL url=new URL(imageURL);
             HttpURLConnection connection=(HttpURLConnection) url.openConnection();
-            //connection.setConnectTimeout(6000);// 超时时间6秒
+            //connection.setConnectTimeout(6000);
             connection.setRequestMethod("GET");
             if (connection.getResponseCode() == 200){
                 in=connection.getInputStream();
-                //Log.d("MyLog","请求=200执行：in=connection.getInputStream()");
                 return in;
             }
             else{
@@ -108,9 +106,7 @@ public class HttpHelper {
             }
 
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             Log.d("MyLog","in---:"+e.getMessage()+"-- "+imageURL);
-            //e.printStackTrace();
             return null;
         }
     }
@@ -122,8 +118,7 @@ public class HttpHelper {
         return doGet(url);
     }
     //获取更新apk的url
-    public static String getApkUrl(String updateUrl)
-    {
+    public static String getApkUrl(String updateUrl){
 
         URL url= null;
         try {
@@ -148,17 +143,15 @@ public class HttpHelper {
                 return null;
             }
         } catch (Exception e) {
-            Log.d("MyLog","app--http报异常"+e.getMessage());
             return null;
         }
 
     }
     //send吐槽
-    public static String doPost(String uriApI,String userAccessKey,String content)
-    {
+    public static String doPost(String uriApI,String userAccessKey,String content){
 
         String result = "";
-        HttpPost httpRequst = new HttpPost(uriApI);//创建HttpPost对象
+        HttpPost httpRequst = new HttpPost(uriApI);
 
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("userAccessKey", userAccessKey));
@@ -190,7 +183,6 @@ public class HttpHelper {
 
     public static String getProductIconList(){
         String url = "http://poseido.hekr.me/appcategories.json?";
-        //String url = "http://192.168.1.81:8080/poseido/appcategories.json?";
         return doGet(url);
     }
 
@@ -216,7 +208,7 @@ public class HttpHelper {
 
         return doGet(url);
     }
-
+    
     private static String getRandomString(int length) { //length表示生成字符串的长度
         String base = "abcdefghijklmnopqrstuvwxyz0123456789";
         Random random = new Random();

@@ -28,7 +28,6 @@
             android:persistent="true"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"
             >
-        <!-- android:theme="@android:style/Theme.NoTitleBar.Fullscreen" -->
         <activity
                 android:name=".LoginActivity"
                 android:label="HEKR"

@@ -1,15 +1,11 @@
 package com.hekr.android.app.util;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import com.hekr.android.app.ListDeviceActivity;
-import com.hekr.android.app.MainActivity;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -192,54 +188,6 @@ public class AssetsDatabaseManager {
         return false;
     }
 
-    public boolean needProductPageInsert(String pageId){
-        if(mInstance!=null)
-        {
-            SQLiteDatabase db = mInstance.getDatabase("db");
-            Cursor cursor=null;
-            try {
-                cursor = db.rawQuery("select path from page where id=?",
-                        new String[]{pageId});
-                //数据库查出来的结果为0条数据
-                if(cursor.getCount()==0)
-                {
-                    return true;
-                }
-                return false;
-            }catch (Exception e){
-                return false;
-            }finally {
-                if(cursor!=null) {
-                    cursor.close();
-                }
-            }
-        }
-        return false;
-    }
-    public boolean needProductPageUpdate(String pageId,String version){
-        if(mInstance!=null)
-        {
-            SQLiteDatabase db = mInstance.getDatabase("db");
-            Cursor cursor=null;
-            try {
-                cursor = db.rawQuery("select path from page where id=? and version=?",
-                        new String[]{pageId,version});
-                if(cursor.getCount()==0)
-                {
-                    return true;
-                }
-                return false;
-            }catch (Exception e){
-                return false;
-            }finally {
-                if(cursor!=null) {
-                    cursor.close();
-                }
-            }
-        }
-        return false;
-    }
-
     private String getDatabaseFilepath(){
         return String.format(databasepath, context.getApplicationInfo().packageName);
     }
@@ -265,7 +213,6 @@ public class AssetsDatabaseManager {
             ostream.close();
         }
         catch(Exception e){
-            //e.printStackTrace();
             try{
                 if(istream!=null)
                     istream.close();

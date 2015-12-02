@@ -185,22 +185,4 @@ public class SliderMenu extends HorizontalScrollView{
             openMenu();
         }
     }
-//    protected void onScrollChanged(int l, int t, int oldl, int oldt)
-//    {
-//        super.onScrollChanged(l, t, oldl, oldt);
-//        float scale = l * 1.0f / mMenuWidth;
-//        float leftScale = 1 - 0.3f * scale;
-//        float rightScale = 0.8f + scale * 0.2f;
-//
-//        ViewHelper.setScaleX(mMenu, leftScale);
-//        ViewHelper.setScaleY(mMenu, leftScale);
-//        ViewHelper.setAlpha(mMenu, 0.6f + 0.4f * (1 - scale));
-//        ViewHelper.setTranslationX(mMenu, mMenuWidth * scale * 0.7f);
-//
-//        ViewHelper.setPivotX(mContent, 0);
-//        ViewHelper.setPivotY(mContent, mContent.getHeight() / 2);
-//        ViewHelper.setScaleX(mContent, rightScale);
-//        ViewHelper.setScaleY(mContent, rightScale);
-//
-//    }
 }

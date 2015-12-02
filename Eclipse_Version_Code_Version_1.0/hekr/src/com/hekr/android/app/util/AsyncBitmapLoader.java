@@ -14,11 +14,8 @@ import java.util.HashMap;
 /**
  * Created by xubukan on 2015/3/29.
  */
-public class AsyncBitmapLoader
-{
-    /**
-     * 内存图片软引用缓冲
-     */
+public class AsyncBitmapLoader {
+	
     private static String CachePath = "/mnt/sdcard/Hekr/";
 
     public static Bitmap SaveBitmap(final String imageURL) {
@@ -49,7 +46,7 @@ public class AsyncBitmapLoader
 
                     fos = new FileOutputStream(bitmapFile);
                     if(bitmap!=null){
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);// 把数据写入文件
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
                     }
                 } catch (Exception e) {
                     Log.d("MyLog","save图片时流转换成bitmap出错:"+e.getMessage());
@@ -58,7 +55,6 @@ public class AsyncBitmapLoader
                         fos.flush();
                         fos.close();
                     } catch (IOException e) {
-                        //e.printStackTrace();
                     }
                 }
             }

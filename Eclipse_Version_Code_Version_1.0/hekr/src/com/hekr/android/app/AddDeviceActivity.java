@@ -40,8 +40,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddDeviceActivity extends Activity
-{
+public class AddDeviceActivity extends Activity {
 
     private WifiManager wifiManager;
     private ConnectivityManager connectManager;
@@ -55,7 +54,7 @@ public class AddDeviceActivity extends Activity
 
     private final static String TAG="MyLog";
     private CustomProgress addProgressBar;
-  //监听当前网络状态
+    //监听当前网络状态
     private BroadcastReceiver addconnectionReceiver;
     
     //密码框
@@ -131,18 +130,13 @@ public class AddDeviceActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_device);
         Log.i("LifeCycle", "AddDeviceActivity--onCreate()被触发");
-        wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);        //获得系统wifi服务
+        //获得系统wifi服务
+        wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);        
         connectManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
 
         createReceiver();
-                 //存放周围wifi热点对象的列表
+        //存放周围wifi热点对象的列表
         list = (ArrayList<ScanResult>) wifiManager.getScanResults();
-        try {
-            wifiManager.setWifiEnabled(true);
-        }catch (Exception e){
-            Log.i("MyLog","不允许打开wifi");
-        }
-        //List<WIFI> ssid_list = new ArrayList<WIFI>();//存放了热点名称的list
         WIFI firstw = new WIFI();
         firstw.setSsid(getResources().getString(R.string.choose_router).toString());
         ssid_list.add(firstw);
@@ -154,12 +148,11 @@ public class AddDeviceActivity extends Activity
                 w.setChannel(WifiAdmin.getChannelByFrequency(list.get(i).frequency));
                 w.setSsid(list.get(i).SSID);
                 w.setEncryption(WifiAdmin.getEnncryption(list.get(i).capabilities));
-
                 ssid_list.add(w);
-//          Log.v(TAG,"他的ssid:是---"+list.get(i).SSID+"-----加密"+list.get(i).capabilities+"\n");
             }
         }
-        spinner = (Spinner) findViewById(R.id.setspinner);//wifi热点选择下拉框
+        //wifi热点选择下拉框
+        spinner = (Spinner) findViewById(R.id.setspinner);
         //下面R.layout.spinner_item里面可以设置spinner初始选中的字的颜色
         adapter = new ArrayAdapter<WIFI>(this,R.layout.spinner_item,ssid_list);
         //下面R.layout.myspinner可以修改选出的wifi的高度之类的
@@ -173,9 +166,6 @@ public class AddDeviceActivity extends Activity
             public void onChildViewAdded(View parent, View child) {
                 ssid_list.clear();
                 list = (ArrayList<ScanResult>) wifiManager.getScanResults();
-                if(list!=null){
-                    Log.i("AddLog","list触发："+list);
-                }
 
                 WIFI firstw = new WIFI();
                 firstw.setSsid(getResources().getString(R.string.choose_router).toString());
@@ -187,8 +177,7 @@ public class AddDeviceActivity extends Activity
                         w.setChannel(WifiAdmin.getChannelByFrequency(list.get(i).frequency));
                         w.setSsid(list.get(i).SSID);
                         w.setEncryption(WifiAdmin.getEnncryption(list.get(i).capabilities));
-                        ssid_list.add(w);
-                        
+                        ssid_list.add(w);                     
                     }
                 }
                 if(adapter!=null){
@@ -327,7 +316,6 @@ public class AddDeviceActivity extends Activity
             public void onClick(View v)
             {
                 String nowWifi= WifiAdmin.clearSSID(wifiManager.getConnectionInfo().getSSID());
-                Log.v("MyLog","----------"+nowWifi);
                 if(Global.ACCESSKEY==null) {
                     Toast.makeText(AddDeviceActivity.this, getResources().getString(R.string.please_connect_network_then_adddevice).toString(), Toast.LENGTH_SHORT).show();
                 }
@@ -335,7 +323,6 @@ public class AddDeviceActivity extends Activity
                     if (nowWifi != null && nowWifi.length() > 5 && "HEKR_".equalsIgnoreCase(nowWifi.substring(0, 5)))
                     {
                         name = spinner.getSelectedItem().toString();
-                        Log.v(TAG, "用户选择的路由wifi名称：" + name+" wifi密码："+ passwordText.getText().toString());
                         password=passwordText.getText().toString();
                         if (name == null||passwordText.getText().toString().trim()==null||"".equals(passwordText.getText().toString().trim())) {
                             Toast.makeText(AddDeviceActivity.this, getResources().getString(R.string.please_choose_message).toString(), Toast.LENGTH_SHORT).show();
@@ -399,7 +386,6 @@ public class AddDeviceActivity extends Activity
                 it.setClass(AddDeviceActivity.this, MainActivity.class);
                 it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(it);
-                //finish();
             }
             else{
                 if(addProgressBar!=null){
@@ -425,7 +411,6 @@ public class AddDeviceActivity extends Activity
                     NetworkInfo netInfo = mConnectivityManager.getActiveNetworkInfo();
                     if(netInfo != null && netInfo.isAvailable())
                     {
-
                         //网络连接
                         if(netInfo.getType()==ConnectivityManager.TYPE_WIFI)
                         {
@@ -461,14 +446,13 @@ public class AddDeviceActivity extends Activity
                 }
             }
         };
-        // 注册网络监听广播
+        //注册网络监听广播
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(addconnectionReceiver, intentFilter);
     }
 
-    protected void onResume()
-    { //变成竖屏
+    protected void onResume(){ 
         if(getRequestedOrientation()!= ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT)
         {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
@@ -487,25 +471,17 @@ public class AddDeviceActivity extends Activity
     }
 
     //让热点设备连接路由器
-    public String getRouterBackString(String name,String password,int channel,String bssid,String encryption)
-    {
+    public String getRouterBackString(String name,String password,int channel,String bssid,String encryption){
         try {
             bssid = URLEncoder.encode(bssid, "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            bssid=null;
-            Log.i("MyLog","bssid解码成utf-8出错:"+e.getMessage());
-        }
-        try {
             password = URLEncoder.encode(password,"utf-8");
-        } catch (UnsupportedEncodingException e) {
-            password=null;
-            Log.i("MyLog","用户添加设备时输入的password解码成utf-8出错:"+e.getMessage());
-        }
-        try {
             name = URLEncoder.encode(name,"utf-8");
         } catch (UnsupportedEncodingException e) {
+            bssid=null;
+            password=null;
             name=null;
-            Log.i("MyLog","用户选择的路由器name解码成utf-8出错:"+e.getMessage());
+            Log.i("MyLog","bssid解码成utf-8出错:"+e.getMessage());
+            
         }
         String str="http://192.168.10.1/t/set_bridge?ssid="+name+"&channel="+channel+"&bssid="+bssid+"&encryption="+encryption+"&key="+password;
         URL url= null;
@@ -541,7 +517,6 @@ public class AddDeviceActivity extends Activity
                 try {
                     Thread.sleep(6000);
                 } catch (InterruptedException e1) {
-                    Log.d("MyLog", "休眠出错");
                 }
                 runnable3.run();
             }
@@ -552,6 +527,5 @@ public class AddDeviceActivity extends Activity
     public void onPause() {
         super.onPause();
         Log.i("LifeCycle", "AddDeviceActivity--onPause()被触发");
-        
     }
 }

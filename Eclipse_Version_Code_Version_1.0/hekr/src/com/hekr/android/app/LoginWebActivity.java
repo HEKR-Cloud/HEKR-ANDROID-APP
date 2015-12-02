@@ -9,14 +9,12 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.*;
-import android.widget.Toast;
 
 import com.hekr.android.app.ui.CustomProgress;
 import com.hekr.android.app.util.AssetsDatabaseManager;
 import com.hekr.android.app.util.MySettingsHelper;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.hekr.android.app.util.ThreadPool;
 
@@ -25,7 +23,7 @@ import java.util.HashMap;
 /**
  * Created by xubukan on 2015/3/20.
  */
-public class LoginWebActivity extends Activity{
+public class LoginWebActivity extends Activity {
 
     private WebView mWeb;
     private CustomProgress loginWebProgressBar;
@@ -90,7 +88,7 @@ public class LoginWebActivity extends Activity{
 							}
                             ThreadPool threadPool = ThreadPool.getThreadPool();
                             threadPool.addTask(MainActivity.keyRunnable);
-                            Intent  it = new Intent();
+                            Intent it = new Intent();
                             it.setClass(LoginWebActivity.this, MainActivity.class);
                             it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(it);
@@ -107,24 +105,21 @@ public class LoginWebActivity extends Activity{
         mWeb.loadUrl(url);
     }
 
-    private void clearCookies(Context context)
-    {
+    private void clearCookies(Context context){
         CookieSyncManager cookieSyncMngr = CookieSyncManager.createInstance(context);
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeAllCookie();
         CookieSyncManager.getInstance().sync();
     }
-    public void navBack(View view)
-    {
+    public void navBack(View view){
         Intent  it = new Intent();
         it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         it.setClass(LoginWebActivity.this, LoginActivity.class);
         startActivity(it);
         finish();
     }
-    //竖屏
-    protected void onResume()
-    { /** * 设置为竖屏 */
+
+    protected void onResume(){ 
         if(getRequestedOrientation()!= ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT)
         {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);

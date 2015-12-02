@@ -15,19 +15,6 @@
             android:layout_marginBottom="0dp"
             android:background="#00000000"
             >
-        <com.hekr.android.app.ui.IconView
-                android:layout_alignParentLeft="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="4dp"
-                android:layout_marginLeft="7dp"
-                android:clickable="true"
-                android:onClick="navBack"
-                android:padding="10dp"
-                android:textSize="20dp"
-                android:textColor="#ffffffff"
-                android:text="&#xf060;" />
         <TextView
                 android:id="@+id/devicetype"
                 android:textColor="#ffffffff"

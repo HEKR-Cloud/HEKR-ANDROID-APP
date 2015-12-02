@@ -8,10 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-
 public class AboutOursActivity extends Activity {
 
-	//显示版本号
     private TextView versionTextView;
     
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +36,8 @@ public class AboutOursActivity extends Activity {
     public void onPause() {
         super.onPause();      
     }
-    //竖屏
-    protected void onResume()
-    { /** * 设置为竖屏 */
+
+    protected void onResume() { 
         if(getRequestedOrientation()!= ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT)
         {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
@@ -49,8 +46,8 @@ public class AboutOursActivity extends Activity {
         
     }
 
-    public void navBack(View view)
-    {
+    public void navBack(View view) {
+    	
         this.finish();
     }
 

@@ -1,13 +1,9 @@
 package com.hekr.android.app;
 
 import android.app.Activity;
-import android.app.NotificationManager;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,7 +16,6 @@ import com.hekr.android.app.ui.CustomProgress;
 
 import android.util.Log;
 
-import com.hekr.android.app.util.AssetsDatabaseManager;
 import com.lambdatm.runtime.lang.Cell;
 import com.lambdatm.runtime.lib.Base;
 import com.lambdatm.runtime.util.Util;
@@ -74,8 +69,8 @@ public class DeviceDetailActivity extends Activity {
 			return super.shouldOverrideUrlLoading(view, url);
 		}
     }
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState){
+    	
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_detail);
         mWeb = (WebView)findViewById(R.id.id_device_web);
@@ -121,9 +116,9 @@ public class DeviceDetailActivity extends Activity {
             mWeb.destroy();
         }
     }
-    //变成竖屏
+
     protected void onResume()
-    { /** * 设置为横屏 */
+    { 
         if(getRequestedOrientation()!= ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT)
         {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);

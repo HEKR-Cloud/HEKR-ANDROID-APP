@@ -88,7 +88,6 @@ public class UpdateManager
         showNoticeDialog();
     }
 
-
     private void showNoticeDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle(mContext.getResources().getString(R.string.software_update).toString());
