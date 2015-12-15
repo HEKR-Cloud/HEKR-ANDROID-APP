@@ -41,11 +41,13 @@ HEKR-ANDROID-APP-V1.0
 
 	   sdk添加：eclipse软件菜单栏Window鼠标左键单击一下->Preferences->Android->Browse...->您电脑上已经安装的sdk路径
 
-    4、Android Support Library package 系列的包来保证高版本sdk开发的向下兼容性，即我们用4.x开发时，在1.6等版本上，可以使用高版本的有些特性，如fragement,ViewPager等
+    4、Android Support Library package 系列的包用来保证高版本sdk开发的向下兼容性，即我们用4.x开发时，在1.6等版本上，可以使用高版本的有些特性，如fragement,ViewPager,NotificationCompat,LoadBroadcastManager,PageTabStrip,Loader,FileProvider等
 
-	   Android Support v4:  这个包是为了照顾1.6及更高版本而设计的，eclipse新建工程时，都默认带有了。
+	   Android Support v4:  这个包是为了照顾1.6(API lever 4)及更高版本而设计的，eclipse新建工程时，都默认带有了。
 
-	   Android Support v7:  这个包是为了照顾2.1及以上版本而设计的，但不包含更低，故如果不考虑1.6,我们可以采用再加上这个包，另外注意，v7是要依赖v4这个包的，即，两个得同时被包含。
+	   Android Support v7:  这个包是为了照顾2.1(API level 7)及以上版本而设计的，另外注意，v7是要依赖v4这个包的，v7支持了Action Bar以及一些Theme的兼容。
+
+	   官方文档：https://developer.android.com/tools/support-library/features.html
 
            添加library依赖 ：项目根目录鼠标右键单击一下->Android->Add->选择你想要的library
 
@@ -54,7 +56,21 @@ HEKR-ANDROID-APP-V1.0
 	       1、方法一：项目根目录鼠标右键单击一下->Build Path->Configure Build Path...->Libraries->Add JARs->你需要添加的jar包(Android Private Libraries下有的jar不需要再次添加)
 		   
 	       2、方法二：将jar包拷到该项目工作空间路径下libs文件夹
-		   
+    5、Theme
+
+	   Holo Theme:
+		      
+	       在4.0之前Android可以说是没有设计可言的，在4.0之后推出了Android Design，从此Android在设计上有了很大的改善，而在程序实现上相应的就是Holo风格，
+
+	   所以你看到有类似 Theme.Holo.Light、Theme.Holo.Light.DarkActionBar 就是4.0的设计风格，但是为了让4.0之前的版本也能有这种风格怎么办呢？这个时候就不得不引用v7包了，
+
+	   所以对应的就有 Theme.AppCompat.Light、Theme.AppCompat.Light.DarkActionBar等。
+
+	   Material Design Theme：
+
+	       这是在设计上Android的又一大突破。对应的程序实现上就有 Theme.Material.Light、Theme.Material.Light.DarkActionBar等，但是这种风格只能应用在在5.0版本的手机，
+
+	   如果在5.0之前应用Material Design该怎么办呢？同样的引用appcompat-v7包，这个时候的Theme.AppCompat.Light、Theme.AppCompat.Light.DarkActionBar就是相对应兼容的Material Design的Theme。
     
     二、jar包使用说明：
 
