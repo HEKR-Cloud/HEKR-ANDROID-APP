@@ -74,7 +74,12 @@ HEKR-ANDROID-APP-V1.0
     
     二、jar包使用说明：
 
-    1、fastjson 参考示例：http://www.open-open.com/lib/view/open1421744060171.html
+    1、fastjson 
+	    Fastjson是一个Java语言编写的高性能功能完善的JSON库。它采用一种“假定有序快速匹配”的算法，把JSON Parse的性能提升到极致，是目前Java语言中最快的JSON库。Fastjson接口简单易用，
+	已经被广泛使用在缓存序列化、协议交互、Web输出、Android客户端等多种应用场景。
+	
+	参考示例：http://www.open-open.com/lib/view/open1421744060171.html
+		  https://github.com/alibaba/fastjson/wiki
 
     2、lambdaTM2.0 :获取设备detail中具体信息。
 
